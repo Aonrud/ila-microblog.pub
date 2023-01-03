@@ -22,7 +22,7 @@
 </head>
 <body>
 <div id="main">
-    <main{%- block main_tag %}{%- endblock %} class="container">
+    <div {%- block main_tag %}{%- endblock %} class="container">
 
     {% if is_admin %}
     <div id="admin">
@@ -55,7 +55,7 @@
     </div>
     {% endif %}
     {% block content %}{% endblock %}
-    </main>
+    </div>
 </div>
 
 <footer class="footer">
