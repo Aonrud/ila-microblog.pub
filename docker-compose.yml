@@ -4,10 +4,11 @@ services:
   server:
     image: microblogpub/microblogpub:latest 
     container_name: microblogpub
-    user: 1000:1000
+    user: 1001:1001
     restart: always
     volumes:
       - ./data:/app/data
       - ./app/static:/app/app/static
+      - ./app/scss:/app/app/scss
     ports:
-      - "8000:8000"
+      - "8082:8000"
