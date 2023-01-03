@@ -1,0 +1,37 @@
+{%- import "utils.html" as utils with context -%}
+{% extends "layout.html" %}
+
+{% block head %}
+<title>{{ local_actor.display_name }} - Outbox</title>
+{% endblock %}
+
+{% block content %}
+
+<section class="admin-page admin-outbox">
+    {{ utils.display_box_filters("admin_outbox") }}
+
+    {% for outbox_object in outbox %}
+
+        {% if outbox_object.ap_type == "Announce" %}
+            <div class="actor-action">You shared <span title="{{ outbox_object.ap_published_at.isoformat() }}">{{ outbox_object.ap_published_at | timeago }}</span></div>
+            {{ utils.display_object(outbox_object.relates_to_anybox_object) }}
+        {% elif outbox_object.ap_type == "Like" %}
+            <div class="actor-action">You liked <span title="{{ outbox_object.ap_published_at.isoformat() }}">{{ outbox_object.ap_published_at | timeago }}</span></div>
+            {{ utils.display_object(outbox_object.relates_to_anybox_object) }}
+        {% elif outbox_object.ap_type == "Follow" %}
+            <div class="actor-action">You followed <span title="{{ outbox_object.ap_published_at.isoformat() }}">{{ outbox_object.ap_published_at | timeago }}</span></div>
+            {{ utils.display_actor(outbox_object.relates_to_actor, actors_metadata) }}
+        {% elif outbox_object.ap_type in ["Article", "Note", "Video", "Question"] %}
+            {{ utils.display_object(outbox_object) }}
+        {% endif %}
+
+    {% endfor %}
+
+    {% if next_cursor %}
+        <footer>
+            <a href="{{ url_for("admin_outbox") }}?cursor={{ next_cursor }}{% if request.query_params.filter_by %}&filter_by={{ request.query_params.filter_by }}{% endif %}" class="btn btn-lg btn-primary">See more</a>
+        </footer>
+    {% endif %}
+</section>
+
+{% endblock %}

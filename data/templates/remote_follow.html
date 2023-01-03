@@ -1,0 +1,32 @@
+{%- import "utils.html" as utils with context -%}
+{% extends "layout.html" %}
+
+{% block head %}
+<title>Remote follow {{ local_actor.display_name }}</title>
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
+{% block content %}
+{% include "header.html" %}
+<div class="row">
+    <div class="col-sm-8">
+        <h2>Follow {{ local_actor.display_name }}</h2>
+        <div>
+            <p class="lead">You can follow the Irish Left Archive with any Fediverse-enabled social media account, such as Mastodon, Pleroma, Pixelfed, etc.</p>
+            <form class="form-inline" action="{{ url_for("post_remote_follow") }}" method="POST">
+                {{ utils.embed_csrf_token() }}
+                <label for="profile">Type your full username and instance below to be brought to your account.</label>
+                <div class="input-group">
+                    <div class="input-group-addon">@</div>
+                    <input type="text" name="profile" class="form-control" placeholder="you@instance.tld" autofocus />
+                </div>
+                <button type="submit" class="btn btn-success"><i class="fas fa-user-plus"></i> Follow</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        {% include "sidebar.html" %}
+    </div>
+</div>
+
+{% endblock %}

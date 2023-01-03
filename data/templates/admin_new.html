@@ -1,0 +1,117 @@
+{%- import "utils.html" as utils with context -%}
+{% extends "layout.html" %}
+
+{% block head %}
+<title>{{ local_actor.display_name }} - New</title>
+{% endblock %}
+
+{% block content %}
+
+<section class="admin-page admin-new">
+    {% if in_reply_to_object %}
+    <div class="actor-action">In reply to:</div>
+    {{ utils.display_object(in_reply_to_object) }}
+    {% endif %}
+
+    <ul class="nav nav-tabs">
+        {% for ap_type in ["Note", "Article", "Question"] %}
+            <li {% if request.query_params.get("type", "Note") == ap_type %}class="active"{% endif %}>
+                <a href="?type={{ ap_type }}">
+                    {{ ap_type }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="segmented col-sm-8">
+        <form class="form admin-new" action="{{ request.url_for("admin_actions_new") }}" enctype="multipart/form-data" method="POST">
+            {{ utils.embed_csrf_token() }}
+            {{ utils.embed_redirect_url() }}
+            
+            <p>
+                <select name="visibility" class="form-control">
+                    {% for (k, v) in visibility_choices %}
+                        <option value="{{ k }}" {% if visibility == k or in_reply_to_object and in_reply_to_object.visibility.name == k %}selected{% endif %}>{{ v }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+
+            {% if request.query_params.type == "Article" %}
+                <p>
+                    <input type="text" class="form-control" name="name" placeholder="Title">
+                </p>
+            {% endif %}
+
+            <div class="form-group">
+                <p><label for="content">Post</label></p>
+                <div class="btn-group">
+                    {% for emoji in emojis %}
+                        <button type="button" class="ji btn btn-default">{{ emoji | safe }}</button>
+                    {% endfor %}
+                        
+                    {% for emoji in custom_emojis %}
+                        <button type="button" class="ji btn btn-default"><img src="{{ emoji.icon.url }}" alt="{{ emoji.name }}" title="{{ emoji.name }}" class="custom-emoji"></button>
+                    {% endfor %}
+                </div>
+
+                <textarea name="content" rows="10" cols="50" autofocus="autofocus" designMode="on" placeholder="Post" class="form-control">{{ content }}</textarea>
+            </div>
+
+            {% if request.query_params.type == "Question" %}
+                <fieldset class="form-group">
+                    <p class="form-group">
+                        <label for="poll_type">Poll Type</label>
+                        <select name="poll_type">
+                            <option value="oneOf">single choice</option>
+                            <option value="anyOf">multiple choices</option>
+                        </select>
+                    </p>
+                    <p class="form-group">
+                        <label for="poll_type">Poll Duration</label>
+                        <select name="poll_duration">
+                            <option value="5">ends in 5 minutes</option>
+                            <option value="30">ends in 30 minutes</option>
+                            <option value="60">ends in 1 hour</option>
+                            <option value="360">ends in 6 hours</option>
+                            <option value="1440">ends in 1 day</option>
+                        </select>
+                    </p>
+                    <div class="form-group">
+                        <label>Poll Options</label>
+                        {% for i in ["1", "2", "3", "4"] %}
+                            <p>
+                                <input type="text" name="poll_answer_{{ i }}" class="form-control" placeholder="Option {{ i }}, leave empty to disable">
+                            </p>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            {% endif %}
+
+            <p class="form-group">
+                <label for="content_warning">Content Warning</label>
+                <input type="text" name="content_warning" placeholder="content warning (will mark the post as sensitive)"{% if content_warning %} value="{{ content_warning }}"{% endif %} class="form-control">
+            </p>
+            
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="is_sensitive" id="is_sensitive">
+                    Mark attachment(s) as sensitive
+                </label>
+            </div>
+            
+            <input type="hidden" name="in_reply_to" value="{{ request.query_params.in_reply_to }}">
+            
+            <div class="form-group">
+                <label for="files">Attachments</label>
+                <input id="files" name="files" type="file" multiple />
+            </div>
+            <div id="alts"></div>
+            <div class="form-group">
+                <input type="submit" value="Publish" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ BASE_URL }}/static/new.js?v={{ JS_HASH }}"></script>
+</section>
+{% endblock %}

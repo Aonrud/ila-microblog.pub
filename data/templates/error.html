@@ -1,0 +1,13 @@
+{%- import "utils.html" as utils with context -%}
+{% extends "layout.html" %}
+{% block main_tag %} class="main-flex"{% endblock %}
+{% block head %}
+<title>{{ title }}</title>
+{% endblock %}
+
+{% block content %}
+<div class="text-center">
+<h1>{{ title | safe }}</h1>
+<p><a href="/">Return to the home page &#187;</a></p>
+</div>
+{% endblock %}

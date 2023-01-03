@@ -1,0 +1,49 @@
+<header class="microblog">
+	<div class="h-card p-author card">
+		<div class="row">
+			<div class="col-xs-3">
+				<a href="/"><img src="/static/ILA_400.png" class="u-photo img-responsive" /></a>
+			</div>
+			<div class="col-xs-9">
+				
+				{%- macro header_item_link(url, text, icon) -%}
+				{% set url_for = BASE_URL + request.app.router.url_path_for(url) %}
+				<li {% if BASE_URL + request.url.path == url_for %}class="active"{% endif %}>
+					<a href="{{ url_for }}">
+						{% if icon != '' %}<span class="{{ icon }}"></span>{% endif %}
+						{{ text }}
+						{% if url == 'followers' %}<span class="label label-info">{{ followers_count }}</span>{% endif %}
+						{% if url == 'following' %}<span class="label label-info">{{ following_count }}</span>{% endif %}
+					</a>
+				</li>
+				{% endmacro %}
+				
+				<h1 class="name">{{ local_actor.name }}</h1>
+				<a href="{{ local_actor.url }}" class="u-url u-uid">
+						<span class="p-name handle">{{ local_actor.handle }}</span>
+				</a>
+				<nav class="flexbox public-top-menu">
+					<ul>
+						{{ header_item_link("index", "Posts", "fas fa-message") }}
+						
+						{% if articles_count %}
+						{{ header_item_link("articles", "Articles", "") }}
+						{% endif %}
+						
+						{% if not HIDES_FOLLOWERS or is_admin %}
+						{{ header_item_link("followers", "Followers", "") }}
+						{% endif %}
+						
+						{% if not HIDES_FOLLOWING or is_admin %}
+						{{ header_item_link("following", "Following", "") }}
+						{% endif %}
+						{{ header_item_link("get_remote_follow", "Follow", "fas fa-user-plus") }}
+					</ul>
+				</nav>
+			</div>
+		</div>
+		<div class="p-note summary">
+			{{ local_actor.summary | safe }}
+		</div>
+	</div>
+</header> 

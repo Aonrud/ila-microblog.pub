@@ -1,0 +1,56 @@
+{%- import "utils.html" as utils with context -%}
+{% extends "layout.html" %}
+
+{% block head %}
+{% if outbox_object %}
+{% if outbox_object.content %}
+    {% set excerpt = outbox_object.content | html2text | trim | truncate(50) %}
+{% else %}
+    {% set excerpt = outbox_object.summary | html2text | trim | truncate(50) %}
+{% endif %}
+<title>{% if outbox_object.name %}{{ outbox_object.name }}{% else %}{{ local_actor.display_name }}: "{{ excerpt }}"{% endif %}</title>
+<link rel="webmention" href="{{ url_for("webmention_endpoint") }}">
+<link rel="alternate" href="{{ request.url }}" type="application/activity+json">
+<meta name="description" content="{{ excerpt }}">
+<meta content="article" property="og:type" />
+<meta content="{{ outbox_object.url }}" property="og:url" />
+<meta content="{{ local_actor.display_name }}'s microblog" property="og:site_name" />
+<meta content="{% if outbox_object.name %}{{ outbox_object.name }}{% else %}Note{% endif %}" property="og:title" />
+<meta content="{{ excerpt }}" property="og:description" />
+<meta content="{{ local_actor.icon_url }}" property="og:image" />
+<meta content="summary" property="twitter:card" />
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if outbox_object %}
+{% include "header.html" %}
+{% endif %}
+
+{% macro display_replies_tree(replies_tree_node) %}
+
+{% if replies_tree_node.is_requested %}
+{{ utils.display_object(replies_tree_node.ap_object, likes=likes, shares=shares, webmentions=webmentions, expanded=not replies_tree_node.is_root, is_object_page=True, is_h_entry=False) }}
+{% else %}
+    {% if replies_tree_node.wm_reply %}
+        {# u-comment h-cite is displayed by default for webmention #}
+        {{ utils.display_webmention_reply(replies_tree_node.wm_reply) }}
+    {% else %}
+        <div class="u-comment h-cite">
+            {{ utils.display_object(replies_tree_node.ap_object, is_h_entry=False) }}
+        </div>
+    {% endif %}
+{% endif %}
+
+{% for child in replies_tree_node.children %}
+    {{ display_replies_tree(child) }}
+{% endfor %}
+
+{% endmacro %}
+
+<div class="h-entry">
+{{ display_replies_tree(replies_tree) }}
+</div>
+
+{% endblock %}

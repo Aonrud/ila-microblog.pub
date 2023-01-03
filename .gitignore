@@ -6,3 +6,4 @@ docs/dist/
 requirements.txt
 app/_version.py
 app/static/favicon.ico
+.directory

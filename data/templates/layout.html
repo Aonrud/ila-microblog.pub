@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="dns-prefetch" href="https://www.leftarchive.ie/" />
+<link rel="prefetch" href="https://www.leftarchive.ie/workspace/assets/css/leftarchive.css?v=20221223" />
+<link rel="prefetch" href="https://www.leftarchive.ie/workspace/assets/fonts/fa-solid-900.woff2" />
+<link rel="prefetch" href="https://www.leftarchive.ie/workspace/assets/fonts/Open_Sans_400.woff2" />
+<link rel="prefetch" href="https://www.leftarchive.ie/workspace/assets/fonts/Open_Sans_Condensed_700.woff2" />
+
+<link rel="stylesheet" href="https://www.leftarchive.ie/workspace/assets/css/leftarchive.css?v=20230103" />
+<link rel="stylesheet" href="{{ BASE_URL }}/static/css/ila.css?v=20230103" />
+<link rel="alternate" title="{{ local_actor.display_name}}'s microblog" type="application/json" href="{{ url_for("json_feed") }}" />
+<link rel="alternate" href="{{ url_for("rss_feed") }}" type="application/rss+xml" title="{{ local_actor.display_name}}'s microblog">
+<link rel="alternate" href="{{ url_for("atom_feed") }}" type="application/atom+xml" title="{{ local_actor.display_name}}'s microblog">
+<link rel="icon" type="image/x-icon" href="{{ BASE_URL }}/static/favicon.ico">
+
+{% block head %}{% endblock %}
+</head>
+<body>
+<div id="main">
+    <main{%- block main_tag %}{%- endblock %} class="container">
+
+    {% if is_admin %}
+    <div id="admin">
+        {% macro admin_menu_item(url, text) %}
+        {% set url_for = BASE_URL + request.app.router.url_path_for(url) %}
+            <li {% if BASE_URL + request.url.path == url_for %}class="active"{% endif %}>
+                <a href="{{ url_for }}">
+                    {{ text }}
+                    {% if (url == 'get_notifications') and (notifications_count) %}<span class="label label-success">{{ notifications_count }}</span>{% endif %}
+                </a>
+            </li>
+        {% endmacro %}
+        <nav class="navbar navbar-inverse" role="navigation">
+            <div id="menu-collapse" class="navbar-collapse">
+                <ul class="nav navbar-nav">
+                    {{ admin_menu_item("index", "Public") }}
+                    {{ admin_menu_item("admin_new", "New") }}
+                    {{ admin_menu_item("admin_stream", "Stream") }}
+                    {{ admin_menu_item("admin_inbox", "Inbox") }}
+                {{ admin_menu_item("admin_outbox", "Outbox") }}
+                    {{ admin_menu_item("admin_direct_messages", "DMs") }}
+                    {{ admin_menu_item("get_notifications", "Notifications") }} 
+                    {{ admin_menu_item("get_lookup", "Lookup") }}
+                    {{ admin_menu_item("admin_bookmarks", "Bookmarks") }}
+                    <li><a href="{{ url_for("logout")}}">Logout</a></li>
+                </ul>
+            </div>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+        </nav>
+    </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+    </main>
+</div>
+
+<footer class="footer">
+</footer>
+{% if is_admin %}
+<script src="{{ BASE_URL }}/static/common-admin.js?v={{ JS_HASH }}"></script>
+{% endif %}
+<script src="{{ BASE_URL }}/static/common.js?v={{ JS_HASH }}"></script>
+</body>
+</html>
