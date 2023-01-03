@@ -1,3 +1,7 @@
+## Irish Left Archive Microblog.pub
+
+This repo is forked to store the template customisation of [microblog.pub](https://microblog.pub/) for the [Irish Left Archive](https://www.leftarchive.ie). It is used for [@ila@leftarchive.ie](https://posts.leftarchive.ie/).
+
 # microblog.pub
 
 A self-hosted, single-user, ActivityPub powered microblog.
