@@ -141,6 +141,8 @@ nav.flexbox {
 	ul {
 		display: flex;
 		flex-wrap: wrap;
+		column-gap: 10px;
+		row-gap: 10px;
 		align-items: center;
 		list-style-type: none;
 		margin: 0;
@@ -148,7 +150,6 @@ nav.flexbox {
 		color: $muted-text;
 	}
 	li {
-		margin-right: 20px;
 		white-space: nowrap;
 		&:last-child {
 			margin-right: 0px;
