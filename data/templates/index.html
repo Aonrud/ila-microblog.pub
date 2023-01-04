@@ -20,53 +20,50 @@
 
 {% block content %}
     {% include "header.html" %}
+    <main class="col-sm-8">
+    {% if request.path_params.tag %}
+        <p class="text-muted delineated">
+            <a href="/" title="Show all posts"><span class="fas fa-arrow-left"></span> Back</a> Showing posts tagged <b>#{{ request.path_params.tag }}</b>
+        </p>
+    {% endif %}
+    {% if objects %}
 
-    <div class="row">
-        <main class="col-sm-8">
-        {% if request.path_params.tag %}
-            <p class="text-muted delineated">
-                <a href="/" title="Show all posts"><span class="fas fa-arrow-left"></span> Back</a> Showing posts tagged <b>#{{ request.path_params.tag }}</b>
-            </p>
-        {% endif %}
-        {% if objects %}
+        <div class="h-feed">
+            <data class="p-name" value="{{ local_actor.display_name}}'s Posts"></data>
+            {% for outbox_object in objects %}
+                {% if outbox_object.ap_type in ["Note", "Video", "Question"] %}
+                    {{ utils.display_object(outbox_object) }}
+                {% elif outbox_object.ap_type == "Announce" %}
+                    <div class="h-entry" id="{{ outbox_object.permalink_id }}">
+                        <div class="shared-header"><strong><a class="p-author h-card" href="{{ local_actor.url }}">{{ utils.display_tiny_actor_icon(local_actor) }}  {{ local_actor.display_name | clean_html(local_actor) | safe }}</a></strong> shared <span title="{{ outbox_object.ap_published_at.isoformat() }}">{{ outbox_object.ap_published_at | timeago }}</span></div>
+                        <blockquote class="h-cite u-repost-of">
+                            <div class="quote"><i class="fas fa-quote-left"></i></div>
+                            {{ utils.display_object(outbox_object.relates_to_anybox_object, is_h_entry=False) }}
+                        </blockquote>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
 
-            <div class="h-feed">
-                <data class="p-name" value="{{ local_actor.display_name}}'s Posts"></data>
-                {% for outbox_object in objects %}
-                    {% if outbox_object.ap_type in ["Note", "Video", "Question"] %}
-                        {{ utils.display_object(outbox_object) }}
-                    {% elif outbox_object.ap_type == "Announce" %}
-                        <div class="h-entry" id="{{ outbox_object.permalink_id }}">
-                            <div class="shared-header"><strong><a class="p-author h-card" href="{{ local_actor.url }}">{{ utils.display_tiny_actor_icon(local_actor) }}  {{ local_actor.display_name | clean_html(local_actor) | safe }}</a></strong> shared <span title="{{ outbox_object.ap_published_at.isoformat() }}">{{ outbox_object.ap_published_at | timeago }}</span></div>
-                            <blockquote class="h-cite u-repost-of">
-                                <div class="quote"><i class="fas fa-quote-left"></i></div>
-                                {{ utils.display_object(outbox_object.relates_to_anybox_object, is_h_entry=False) }}
-                            </blockquote>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
+        {% if has_previous_page or has_next_page %}
+            <div class="box">
+                {% if has_previous_page %}
+                <a href="{{ url_for("index") }}?page={{ current_page - 1 }}">Previous</a>
+                {% endif %}
 
-            {% if has_previous_page or has_next_page %}
-                <div class="box">
-                    {% if has_previous_page %}
-                    <a href="{{ url_for("index") }}?page={{ current_page - 1 }}">Previous</a>
-                    {% endif %}
-
-                    {% if has_next_page %}
-                    <a href="{{ url_for("index") }}?page={{ current_page + 1 }}">Next</a>
-                    {% endif %}
-                </div>
-            {% endif %}
-
-        {% else %}
-            <div class="empty-state">
-                <p>Nothing to see here yet!</p>
+                {% if has_next_page %}
+                <a href="{{ url_for("index") }}?page={{ current_page + 1 }}">Next</a>
+                {% endif %}
             </div>
         {% endif %}
-        </main>
-        <aside class="col-sm-4">
-            {% include "sidebar.html" %}
-        </aside>
-    </div>
+
+    {% else %}
+        <div class="empty-state">
+            <p>Nothing to see here yet!</p>
+        </div>
+    {% endif %}
+    </main>
+    <aside class="col-sm-4">
+        {% include "sidebar.html" %}
+    </aside>
 {% endblock %}
