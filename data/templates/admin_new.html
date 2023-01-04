@@ -6,24 +6,22 @@
 {% endblock %}
 
 {% block content %}
+    <section class="admin-page admin-new col-md-8 col-md-offset-2">
+        {% if in_reply_to_object %}
+        <div class="actor-action">In reply to:</div>
+        {{ utils.display_object(in_reply_to_object) }}
+        {% endif %}
 
-<section class="admin-page admin-new">
-    {% if in_reply_to_object %}
-    <div class="actor-action">In reply to:</div>
-    {{ utils.display_object(in_reply_to_object) }}
-    {% endif %}
+        <ul class="nav nav-tabs">
+            {% for ap_type in ["Note", "Article", "Question"] %}
+                <li {% if request.query_params.get("type", "Note") == ap_type %}class="active"{% endif %}>
+                    <a href="?type={{ ap_type }}">
+                        {{ ap_type }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
 
-    <ul class="nav nav-tabs">
-        {% for ap_type in ["Note", "Article", "Question"] %}
-            <li {% if request.query_params.get("type", "Note") == ap_type %}class="active"{% endif %}>
-                <a href="?type={{ ap_type }}">
-                    {{ ap_type }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-
-    <div class="segmented col-sm-8">
         <form class="form admin-new" action="{{ request.url_for("admin_actions_new") }}" enctype="multipart/form-data" method="POST">
             {{ utils.embed_csrf_token() }}
             {{ utils.embed_redirect_url() }}
@@ -110,8 +108,7 @@
                 <input type="submit" value="Publish" class="btn btn-primary" />
             </div>
         </form>
-    </div>
 
-    <script src="{{ BASE_URL }}/static/new.js?v={{ JS_HASH }}"></script>
-</section>
+        <script src="{{ BASE_URL }}/static/new.js?v={{ JS_HASH }}"></script>
+    </section>
 {% endblock %}

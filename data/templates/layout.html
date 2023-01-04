@@ -52,7 +52,9 @@
             </nav>
         </div>
     {% endif %}
-    {% block content %}{% endblock %}
+    <div class="row">
+        {% block content %}{% endblock %}
+    </div>
     <div class="row">
         {% include "footer.html" %}
     </div>
