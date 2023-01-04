@@ -1,29 +1,29 @@
-    {%- import "utils.html" as utils with context -%}
-    {% extends "layout.html" %}
+{%- import "utils.html" as utils with context -%}
+{% extends "layout.html" %}
 
-    {% block head %}
-    <title>Interact from your instance</title>
-    <meta name="robots" content="noindex, nofollow">
-    {% endblock %}
+{% block head %}
+<title>Interact from your instance</title>
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
 
-    {% block content %}
-    {% include "header.html" %}
+{% block content %}
+{% include "header.html" %}
 
-    <div class="row">
-        <div class="col-sm-8">
-            <h2>Interact from your instance</h2>
+<div class="row">
+    <div class="col-sm-8">
+        <h2>Interact from your instance</h2>
 
-            <form class="form-inline" action="{{ url_for("post_remote_interaction") }}" method="POST">
-                {{ utils.embed_csrf_token() }}
-                <input type="text" name="profile" placeholder="you@instance.tld" class="form-control" autofocus>
-                <input type="hidden" name="ap_id" value="{{ outbox_object.ap_id }}">
-                <input type="submit" value="Interact" class="btn btn-success" />
-            </form>
+        <form class="form-inline" action="{{ url_for("post_remote_interaction") }}" method="POST">
+            {{ utils.embed_csrf_token() }}
+            <input type="text" name="profile" placeholder="you@instance.tld" class="form-control" autofocus>
+            <input type="hidden" name="ap_id" value="{{ outbox_object.ap_id }}">
+            <input type="submit" value="Interact" class="btn btn-success" />
+        </form>
 
-            {{ utils.display_object(outbox_object) }}
-        </div>
-        <div class="col-sm-4">
-            {% include "sidebar.html" %}
-        </div>
+        {{ utils.display_object(outbox_object) }}
     </div>
-    {% endblock %}
+    <div class="col-sm-4">
+        {% include "sidebar.html" %}
+    </div>
+</div>
+{% endblock %}

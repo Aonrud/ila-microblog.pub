@@ -52,12 +52,8 @@
             </nav>
         </div>
     {% endif %}
-    <div class="row">
-        {% block content %}{% endblock %}
-    </div>
-    <div class="row">
-        {% include "footer.html" %}
-    </div>
+    {% block content %}{% endblock %}
+    {% include "footer.html" %}
 </div>
 {% if is_admin %}
 <script src="{{ BASE_URL }}/static/common-admin.js?v={{ JS_HASH }}"></script>

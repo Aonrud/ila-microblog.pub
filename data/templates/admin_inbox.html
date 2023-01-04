@@ -6,39 +6,41 @@
 {% endblock %}
 
 {% block content %}
-    <section class="admin-page admin-inbox col-md-8 col-md-offset-2">
-        {% if show_filters %}
-            {{ utils.display_box_filters("admin_inbox") }}
-        {% endif %}
+    <div class="row">
+        <section class="admin-page admin-inbox col-md-8 col-md-offset-2">
+            {% if show_filters %}
+                {{ utils.display_box_filters("admin_inbox") }}
+            {% endif %}
 
-        {% if not inbox %}
-            <p>Nothing to see yet, <a href="{{ url_for("get_lookup") }}">start following people in the lookup section</a>.</p>
-        {% endif %}
+            {% if not inbox %}
+                <p>Nothing to see yet, <a href="{{ url_for("get_lookup") }}">start following people in the lookup section</a>.</p>
+            {% endif %}
 
-        {% for inbox_object in inbox %}
-        {% if inbox_object.ap_type == "Announce" %}
-            {{ utils.actor_action(inbox_object, "shared", with_icon=True) }}
-            {{ utils.display_object(inbox_object.relates_to_anybox_object) }}
-        {% elif inbox_object.ap_type in ["Article", "Note", "Video", "Page", "Question"] %}
-        {{ utils.display_object(inbox_object) }}
-        {% elif inbox_object.ap_type == "Follow" %}
-            {{ utils.actor_action(inbox_object, "followed you") }}
-            {{ utils.display_actor(inbox_object.actor, actors_metadata) }}
-        {% elif inbox_object.ap_type == "Like" %}
-            {{ utils.actor_action(inbox_object, "liked one of your posts", with_icon=True) }}
-            {{ utils.display_object(inbox_object.relates_to_anybox_object) }}
-        {% else %}
-            <p>
-            Implement {{ inbox_object.ap_type }}
-            {{ inbox_object.ap_object }}
-            </p>
-        {% endif %}
-        {% endfor %}
+            {% for inbox_object in inbox %}
+            {% if inbox_object.ap_type == "Announce" %}
+                {{ utils.actor_action(inbox_object, "shared", with_icon=True) }}
+                {{ utils.display_object(inbox_object.relates_to_anybox_object) }}
+            {% elif inbox_object.ap_type in ["Article", "Note", "Video", "Page", "Question"] %}
+            {{ utils.display_object(inbox_object) }}
+            {% elif inbox_object.ap_type == "Follow" %}
+                {{ utils.actor_action(inbox_object, "followed you") }}
+                {{ utils.display_actor(inbox_object.actor, actors_metadata) }}
+            {% elif inbox_object.ap_type == "Like" %}
+                {{ utils.actor_action(inbox_object, "liked one of your posts", with_icon=True) }}
+                {{ utils.display_object(inbox_object.relates_to_anybox_object) }}
+            {% else %}
+                <p>
+                Implement {{ inbox_object.ap_type }}
+                {{ inbox_object.ap_object }}
+                </p>
+            {% endif %}
+            {% endfor %}
 
-        {% if next_cursor %}
-            <footer>
-                <a href="{{ request.url._path }}?cursor={{ next_cursor }}{% if request.query_params.filter_by %}&filter_by={{ request.query_params.filter_by }}{% endif %}" class="btn btn-primary btn-lg">See more</a>
-            </footer>
-        {% endif %}
-    </section>
+            {% if next_cursor %}
+                <footer>
+                    <a href="{{ request.url._path }}?cursor={{ next_cursor }}{% if request.query_params.filter_by %}&filter_by={{ request.query_params.filter_by }}{% endif %}" class="btn btn-primary btn-lg">See more</a>
+                </footer>
+            {% endif %}
+        </section>
+    </div>
 {% endblock %}
