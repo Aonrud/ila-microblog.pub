@@ -2,7 +2,7 @@
 {% extends "layout.html" %}
 
 {% block head %}
-    <title>{{ local_actor.display_name }} Posts</title>
+    <title>{% if request.path_params.tag %}#{{ request.path_params.tag }} | {% endif %} {{ local_actor.display_name }} Posts</title>
     <link rel="indieauth-metadata" href="{{ url_for("well_known_authorization_server") }}">
     <link rel="authorization_endpoint" href="{{ url_for("indieauth_authorization_endpoint") }}">
     <link rel="token_endpoint" href="{{ url_for("indieauth_token_endpoint") }}">
@@ -21,8 +21,14 @@
 {% block content %}
     {% include "header.html" %}
 
+    <pre class="hidden">{{ request }}</pre>
     <div class="row">
         <main class="col-sm-8">
+        {% if request.path_params.tag %}
+            <p class="text-muted delineated">
+                <a href="/" title="Show all posts"><span class="fas fa-arrow-left"></span> Back</a> Showing posts tagged <b>#{{ request.path_params.tag }}</b>
+            </p>
+        {% endif %}
         {% if objects %}
 
             <div class="h-feed">
