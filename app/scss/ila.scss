@@ -229,19 +229,36 @@ nav.flexbox {
 	}
 }
 
+/*********
+ * Attachments
+ */
+
 .activity-attachment {
-	display: flex;
-	column-gap: 5px;
-	padding: 5px 5px 5px 50px;
-	border-bottom: 1px solid $border;
-	overflow: hidden;
 	position: relative;
-	max-width: fit-content;
-	.attachment-item {
-		overflow: hidden;
+	display: flex;
+	padding-left: 50px;
+	max-width: 100%;
+	flex-wrap: wrap;
+	.attachment-item, .attachment-wrapper {
+		flex: 1 1 50%;
+		max-height: 360px;
+		padding: 5px;
+		a {
+			display: flex;
+			width: 100%;
+			height: 100%;
+			justify-content: center;
+			align-content: center;
+		}
+		img {
+			width: 100%;
+			object-fit: cover;
+		}
 	}
-	img.attachment {
-		max-width: calc(min(750px, 100%)); //Based on full screen
+	&.single {
+		.attachment-item, .attachment-wrapper {
+			max-height: fit-content;
+		}
 	}
 	.icon {
 		display: block;
@@ -251,6 +268,24 @@ nav.flexbox {
 		font-size: 2em;
 		color: $muted-text;
 	}
+	audio, video {
+		width: 100%;
+	}
+}
+
+.video-gif-overlay {
+	display: none;
+}
+
+.video-gif-mode + .video-gif-overlay {
+	display: block;
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	padding: 0 3px;
+	font-size: 0.8em;
+	background: rgba(0,0,0,.5);
+	color: #fff;
 }
 
 ul.poll-items {

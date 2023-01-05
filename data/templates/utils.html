@@ -431,52 +431,52 @@
 {% block display_attachments scoped %}
 
     {% for attachment in object.attachments %}
-    {% if attachment.type != "PropertyValue" %}
-    {% set orientation = "unknown" %}
-    {% if attachment.width %}
-        {% set orientation = "portrait" if attachment.width < attachment.height else "landscape" %}
-    {% endif %}
-    {% if object.sensitive and (attachment.type == "Image" or (attachment | has_media_type("image")) or attachment.type == "Video" or (attachment | has_media_type("video"))) %}
-    <div class="attachment-wrapper">
-        <label for="{{attachment.proxied_url}}" class="label-btn show-hide-sensitive-btn">show/hide sensitive content</label>
-        <div>
-        <div class="sensitive-attachment">
-        <input class="sensitive-attachment-state" type="checkbox" id="{{attachment.proxied_url}}" aria-hidden="true">
-        <div class="sensitive-attachment-box attachment-orientation-{{orientation}}">
-            <div></div>
-    {% else %}
-            <div class="attachment-item attachment-orientation-{{orientation}}">
-    {% endif %}
-
-    {% if attachment.type == "Image" or (attachment | has_media_type("image")) %}
-        {% if attachment.url not in object.inlined_images %}
-        <a class="media-link" href="{{ attachment.proxied_url }}" target="_blank">
-            <img src="{{ attachment.resized_url or attachment.proxied_url }}"{% if attachment.name %} title="{{ attachment.name }}" alt="{{ attachment.name }}"{% endif %} class="attachment u-photo">
-        </a>
+        {% if attachment.type != "PropertyValue" %}
+            {% set orientation = "unknown" %}
+        {% if attachment.width %}
+            {% set orientation = "portrait" if attachment.width < attachment.height else "landscape" %}
         {% endif %}
-    {% elif attachment.type == "Video" or (attachment | has_media_type("video")) %}
-    <div class="video-wrapper">
-    <video controls preload="metadata" src="{{ attachment.url | media_proxy_url }}"{% if attachment.name %} title="{{ attachment.name }}"{% endif %} class="u-video"></video>
-    <div class="video-gif-overlay">GIF</div>
-    </div>
-    {% elif attachment.type == "Audio" or (attachment | has_media_type("audio")) %}
-    <audio controls preload="metadata"  src="{{ attachment.url | media_proxy_url }}"{% if attachment.name%} title="{{ attachment.name }}"{% endif %} class="attachment u-audio"></audio>
-    {% elif attachment.type == "Link" %}
-    <a href="{{ attachment.url }}" class="attachment">{{ attachment.url | truncate(64, True) }}</a> ({{ attachment.mimetype}})
-    {% else %}
-    <a href="{{ attachment.url | media_proxy_url }}"{% if attachment.name %} title="{{ attachment.url }}"{% endif %} class="attachment">
-        {% if attachment.name %}{{ attachment.name }}{% else %}{{ attachment.url | truncate(64, True) }}{% endif %}
-    </a> ({{ attachment.mimetype }})
-    {% endif %}
-    {% if object.sensitive and (attachment.type == "Image" or (attachment | has_media_type("image")) or attachment.type == "Video" or (attachment | has_media_type("video"))) %}
+        {% if object.sensitive and (attachment.type == "Image" or (attachment | has_media_type("image")) or attachment.type == "Video" or (attachment | has_media_type("video"))) %}
+            <div class="attachment-wrapper">
+                <label for="{{attachment.proxied_url}}" class="label-btn show-hide-sensitive-btn">show/hide sensitive content</label>
+                <div>
+                <div class="sensitive-attachment">
+                <input class="sensitive-attachment-state" type="checkbox" id="{{attachment.proxied_url}}" aria-hidden="true">
+                <div class="sensitive-attachment-box attachment-orientation-{{orientation}}">
+                <div></div>
+        {% else %}
+                <div class="attachment-item attachment-orientation-{{orientation}}">
+        {% endif %}
+
+        {% if attachment.type == "Image" or (attachment | has_media_type("image")) %}
+            {% if attachment.url not in object.inlined_images %}
+                <a class="media-link" href="{{ attachment.proxied_url }}" target="_blank">
+                    <img src="{{ attachment.resized_url or attachment.proxied_url }}"{% if attachment.name %} title="{{ attachment.name }}" alt="{{ attachment.name }}"{% endif %} class="attachment u-photo">
+                </a>
+            {% endif %}
+        {% elif attachment.type == "Video" or (attachment | has_media_type("video")) %}
+            <div class="video-wrapper">
+            <video controls preload="metadata" src="{{ attachment.url | media_proxy_url }}"{% if attachment.name %} title="{{ attachment.name }}"{% endif %} class="u-video"></video>
+            <div class="video-gif-overlay">GIF</div>
             </div>
-        </div>
-        </div>
-    </div>
-    {% else %}
-        </div>
-    {% endif %}
-    {% endif %}
+        {% elif attachment.type == "Audio" or (attachment | has_media_type("audio")) %}
+            <audio controls preload="metadata"  src="{{ attachment.url | media_proxy_url }}"{% if attachment.name%} title="{{ attachment.name }}"{% endif %} class="attachment u-audio"></audio>
+        {% elif attachment.type == "Link" %}
+            <a href="{{ attachment.url }}" class="attachment">{{ attachment.url | truncate(64, True) }}</a> ({{ attachment.mimetype}})
+        {% else %}
+            <a href="{{ attachment.url | media_proxy_url }}"{% if attachment.name %} title="{{ attachment.url }}"{% endif %} class="attachment">
+                {% if attachment.name %}{{ attachment.name }}{% else %}{{ attachment.url | truncate(64, True) }}{% endif %}
+            </a> ({{ attachment.mimetype }})
+        {% endif %}
+        {% if object.sensitive and (attachment.type == "Image" or (attachment | has_media_type("image")) or attachment.type == "Video" or (attachment | has_media_type("video"))) %}
+                    </div>
+                </div>
+                </div>
+            </div>
+        {% else %}
+            </div>
+        {% endif %}
+        {% endif %}
     {% endfor %}
 {% endblock %}
 {% endmacro %}
@@ -723,7 +723,7 @@
     {% endif %}
 
     {% if object.attachments %}
-        <div class="activity-attachment card">
+        <div class="activity-attachment card {% if object.attachments|length == 1 %} single{% endif %}">
             <div class="icon"><i class="fas fa-paperclip"></i></div>
             {{ display_attachments(object) }}
         </div>
