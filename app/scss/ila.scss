@@ -408,3 +408,17 @@ ul.poll-items {
 	font-variant: small-caps;
 	color: $muted-text;
 }
+
+
+/*******
+ * This is awful, but Twig blocks the style attribute needed by the Bootstrap progress bar.
+ * Also requires Dart SASS, so won't work on sassc
+ */
+
+
+@for $i from 1 through 100 {
+	$val: $i + '%';
+	.pc-#{$i} {
+		width: #{$i} + '%';
+	}
+}

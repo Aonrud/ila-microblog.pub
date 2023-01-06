@@ -696,7 +696,7 @@
                     <span class="text-muted">{{ pct }}% <span class="muted">({{ item.replies.totalItems }} votes)</span></span>
                 </p>
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ pct }}" aria-valuemin="0" aria-valuemax="100" style="{{ 'width: ' ~ pct ~ '%' }}">
+                    <div class="progress-bar {{ 'pc-' ~ pct }}" role="progressbar" aria-valuenow="{{ pct }}" aria-valuemin="0" aria-valuemax="100">
                         <span class="sr-only">{{ pct }}%</span>
                     </div>
                 </div>
