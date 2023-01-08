@@ -209,8 +209,8 @@ nav.flexbox {
 
 .activity-og-meta {
 	display: flex;
-	padding: 0;	
-	div:first-child {
+	padding: 0;
+	.meta-img {
 		flex: 0 0 150px;
 		border-radius: 4px 0 0 4px;
 		img {

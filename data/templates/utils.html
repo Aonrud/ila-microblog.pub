@@ -412,7 +412,7 @@
 {% for og_meta in object.og_meta[:1] %}
 <a href="{{ og_meta.url | privacy_replace_url }}" class="activity-og-meta card">
     {% if og_meta.image %}
-        <div><img src="{{ og_meta.image | media_proxy_url }}" /></div>
+        <div class="meta-img"><img src="{{ og_meta.image | media_proxy_url }}" /></div>
     {% endif %}
     <div class="caption">
         <h4>{{ og_meta.title }}</h4>
