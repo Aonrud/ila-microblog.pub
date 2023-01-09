@@ -810,7 +810,7 @@
                 {% endfor %}
                 {% if object.likes_count > likes | length %}
                     <div class="and-x-more">
-                        and {{ object.likes_count - likes | length }} more.
+                        … and {{ object.likes_count - likes | length }} more
                     </div>
                 {% endif %}
                 </div>

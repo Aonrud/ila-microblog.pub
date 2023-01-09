@@ -1,433 +1,435 @@
-	/**
-	* Additional styles for the custom install of microblog.pub.
-	* These extend the default CSS file of the main site, which is also pulled.
-	*/
+/**
+* Additional styles for the custom install of microblog.pub.
+* These extend the default CSS file of the main site, which is also pulled.
+*/
 
-	$background: #fafafa;
-	$border: #ccc;
-	$muted-text: #aaa;
-	$muted-link: #888;
-	$muted-link-hover: #666;
+$background: #fafafa;
+$border: #ccc;
+$muted-text: #aaa;
+$muted-link: #888;
+$muted-link-hover: #666;
 
-	//Copy from main site
-	$primary: #428bca;
-	$primary-dark: #246;
-	
-	header.microblog {
-		background: top / cover no-repeat url('/static/header-3-2.png');
-		margin: 0 0 15px;
-		padding: 0 15px 3em;
-		font-size: 1.15em;
-		.card {
-			padding: 15px;
-			max-width: 100%;
-			border-radius: 4px 4px 0 0;
-			border-top: none;
-		}
-		.u-photo {
-			position: relative;
-			top: -15px;
-			left: -16px; //+1 because of border
-		}
-		.u-uid {
-			display: block;
-			font-weight: 700;
-			font-size: 1.2em;
-			margin: 15px 0;
-		}
-		div[class*="col-"] {
-			padding: 0;
-		}
+//Copy from main site
+$primary: #428bca;
+$primary-dark: #246;
+
+header.microblog {
+	background: top / cover no-repeat url('/static/header-3-2.png');
+	margin: 0 0 15px;
+	padding: 0 15px 3em;
+	font-size: 1.15em;
+	.card {
+		padding: 15px;
+		max-width: 100%;
+		border-radius: 4px 4px 0 0;
+		border-top: none;
 	}
-
-	@media screen and (min-width: 768px) {
-		header.microblog .card {
-			width: 75%;
-		}
-	}
-
-	.h-entry {
-		border-bottom: 1px solid $border;
-		margin: 15px 0;
-		font-size: 1.15em;
-		padding-left: 65px;
-		.h-cite {
-			margin: 15px 0 5px 15px;
-		}
-		&.ap-object > .actor-box, & > .ap-object:first-child .actor-box, & > .shared-header {
-			margin-left: -65px;
-		}
-	}
-
-	.ap-object {
-		border-bottom: 1px solid $border;
-		.h-entry div:last-child & {
-			border-bottom: none;
-		}
-		.actor-box {
-			display: flex;
-			column-gap: 15px;
-			.icon-box {
-				flex: 0 0 50px;
-				border-top-left-radius: 4px;
-			}
-			.actor-icon {
-				max-width: 50px;
-			}
-			a.u-url {
-				font-size: 1.15em;
-				margin-top: 5px;
-				flex: 1;
-				.actor-handle {
-					color: $muted-link;
-				}
-				&:hover, &:active {
-					text-decoration: none;
-					strong {
-						text-decoration: underline;
-					}
-					.actor-handle {
-						color: $muted-link-hover;
-					}
-				}
-			}
-		}
-	}
-
-	.ap-object-expanded {
-		margin-left: -65px;
-		padding-left: 15px;
-		border-left: 3px solid $primary;
-	}
-
-	.h-entry blockquote.u-repost-of {
-		margin: 15px 0;
-		padding: 0;
-		border-left: 0;
-		font-size: 1em;
-		div.quote {
-			position: absolute;
-			left: 40px;
-			font-size: 1.5em;
-			color: $muted-text;
-		}
-		p {
-			font-size: 1em;
-		}
-		.ap-object {
-			border-bottom: 0;
-		}
-	}
-
-	.shared-header {
-		.tiny-actor-icon {
-			max-width: 25px;
-		}
-	}
-
-	.pinned {
+	.u-photo {
 		position: relative;
+		top: -15px;
+		left: -16px; //+1 because of border
 	}
-
-	.pin {
-		position: absolute;
+	.u-uid {
 		display: block;
-		top: 15px;
-		right: 15px;
+		font-weight: 700;
+		font-size: 1.2em;
+		margin: 15px 0;
+	}
+	div[class*="col-"] {
+		padding: 0;
+	}
+}
+
+@media screen and (min-width: 768px) {
+	header.microblog .card {
+		width: 75%;
+	}
+}
+
+.h-entry {
+	border-bottom: 1px solid $border;
+	margin: 15px 0;
+	font-size: 1.15em;
+	padding-left: 65px;
+	.h-cite {
+		margin: 15px 0 5px 15px;
+	}
+	&.ap-object > .actor-box, & > .ap-object:first-child .actor-box, & > .shared-header {
+		margin-left: -65px;
+	}
+}
+
+.ap-object {
+	border-bottom: 1px solid $border;
+	.h-entry div:last-child & {
+		border-bottom: none;
+	}
+	.actor-box {
+		display: flex;
+		column-gap: 15px;
+		.icon-box {
+			flex: 0 0 50px;
+			border-top-left-radius: 4px;
+		}
+		.actor-icon {
+			max-width: 50px;
+		}
+		a.u-url {
+			font-size: 1.15em;
+			margin-top: 5px;
+			flex: 1;
+			.actor-handle {
+				color: $muted-link;
+			}
+			&:hover, &:active {
+				text-decoration: none;
+				strong {
+					text-decoration: underline;
+				}
+				.actor-handle {
+					color: $muted-link-hover;
+				}
+			}
+		}
+	}
+}
+
+.ap-object-expanded {
+	margin-left: -65px;
+	padding-left: 15px;
+	border-left: 3px solid $primary;
+}
+
+.h-entry blockquote.u-repost-of {
+	margin: 15px 0;
+	padding: 0;
+	border-left: 0;
+	font-size: 1em;
+	div.quote {
+		position: absolute;
+		left: 40px;
+		font-size: 1.5em;
 		color: $muted-text;
 	}
+	p {
+		font-size: 1em;
+	}
+	.ap-object {
+		border-bottom: 0;
+	}
+}
 
-	nav.flexbox {
+.shared-header {
+	.tiny-actor-icon {
+		max-width: 25px;
+	}
+}
+
+.pinned {
+	position: relative;
+}
+
+.pin {
+	position: absolute;
+	display: block;
+	top: 15px;
+	right: 15px;
+	color: $muted-text;
+}
+
+nav.flexbox {
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		column-gap: 10px;
+		row-gap: 10px;
+		align-items: center;
+		list-style-type: none;
+		margin: 0;
+		padding: 5px 0;
+		color: $muted-text;
+	}
+	li {
+		white-space: nowrap;
+		&:last-child {
+			margin-right: 0px;
+		}
+	}
+	a {
+		color: $muted-link;
+		text-decoration: none;
+		&:hover, &:active, &.active {
+			color: $muted-link-hover;
+		}
+	}
+	&.public-top-menu {
 		ul {
-			display: flex;
-			flex-wrap: wrap;
-			column-gap: 10px;
-			row-gap: 10px;
-			align-items: center;
-			list-style-type: none;
-			margin: 0;
-			padding: 5px 0;
-			color: $muted-text;
+			margin-right: 15px;
 		}
 		li {
-			white-space: nowrap;
-			&:last-child {
-				margin-right: 0px;
-			}
-		}
-		a {
-			color: $muted-link;
-			text-decoration: none;
-			&:hover, &:active, &.active {
-				color: $muted-link-hover;
-			}
-		}
-		&.public-top-menu {
-			ul {
-				margin-right: 15px;
-			}
-			li {
-				margin-right: 0;
-				a {
-					display: block;
-					padding: 10px 15px;
-					color: $primary;
-					border-bottom: 1px solid #fff;
-					&:hover {
-						background: $background;
-					}
-				}
-				&.active a, a:active {
-					color: $primary-dark;
-					border-bottom: 1px solid $primary;
-				}
-			}
-		}
-	}
-
-	#following, #followers {
-		& > ul {
-			list-style: none;
-			padding-left: 0;
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: space-between;
-			& > li {
-				min-width: 50%;
-				max-width: 100%;
-			}
-		}
-		.ap-object {
-			padding: 15px;
-			border-bottom: none;
-		}
-	}
-
-	.activity-og-meta, .activity-attachment {
-		background: $background;
-	}
-
-	.activity-og-meta {
-		display: flex;
-		padding: 0;
-		.meta-img {
-			flex: 0 0 150px;
-			border-radius: 4px 0 0 4px;
-			img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-			}
-		}
-		.caption {
-			overflow: hidden;
-			h4 {
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
-		}
-	}
-
-	/*********
-	* Attachments
-	*/
-
-	.activity-attachment {
-		position: relative;
-		display: flex;
-		padding-left: 50px;
-		max-width: 100%;
-		flex-wrap: wrap;
-		.attachment-item, .attachment-wrapper {
-			flex: 1 1 50%;
-			max-height: 360px;
-			padding: 5px;
+			margin-right: 0;
 			a {
-				display: flex;
-				width: 100%;
-				height: 100%;
-				justify-content: center;
-				align-content: center;
+				display: block;
+				padding: 10px 15px;
+				color: $primary;
+				border-bottom: 1px solid #fff;
+				&:hover {
+					background: $background;
+				}
 			}
-			img {
-				width: 100%;
-				object-fit: cover;
-			}
-		}
-		&.single {
-			.attachment-item, .attachment-wrapper {
-				max-height: fit-content;
+			&.active a, a:active {
+				color: $primary-dark;
+				border-bottom: 1px solid $primary;
 			}
 		}
-		.icon {
-			display: block;
-			position: absolute;
-			top: 5px;
-			left: 10px;
-			font-size: 2em;
-			color: $muted-text;
+	}
+}
+
+#following, #followers {
+	& > ul {
+		list-style: none;
+		padding-left: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		& > li {
+			min-width: 50%;
+			max-width: 100%;
 		}
-		audio, video {
+	}
+	.ap-object {
+		padding: 15px;
+		border-bottom: none;
+	}
+}
+
+.activity-og-meta, .activity-attachment {
+	background: $background;
+}
+
+.activity-og-meta {
+	display: flex;
+	padding: 0;
+	.meta-img {
+		flex: 0 0 150px;
+		border-radius: 4px 0 0 4px;
+		img {
 			width: 100%;
+			height: 100%;
+			object-fit: cover;
 		}
 	}
-
-	.video-gif-overlay {
-		display: none;
+	.caption {
+		overflow: hidden;
+		h4 {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 	}
+}
 
-	.video-gif-mode + .video-gif-overlay {
+/*********
+* Attachments
+*/
+
+.activity-attachment {
+	position: relative;
+	display: flex;
+	padding-left: 50px;
+	max-width: 100%;
+	flex-wrap: wrap;
+	.attachment-item, .attachment-wrapper {
+		flex: 1 1 50%;
+		max-height: 360px;
+		padding: 5px;
+		a {
+			display: flex;
+			width: 100%;
+			height: 100%;
+			justify-content: center;
+			align-content: center;
+		}
+		img {
+			width: 100%;
+			object-fit: cover;
+		}
+	}
+	&.single {
+		.attachment-item, .attachment-wrapper {
+			max-height: fit-content;
+		}
+	}
+	.icon {
 		display: block;
 		position: absolute;
 		top: 5px;
-		left: 5px;
-		padding: 0 3px;
-		font-size: 0.8em;
-		background: rgba(0,0,0,.5);
-		color: #fff;
-	}
-
-	ul.poll-items {
-		padding-left: none;
-		list-style: none;
-		font-variant: small-caps;
-	}
-
-	.panel {
-		font-size: 1.15em;
-		.btn {
-			font-size: 1.15em;
-		}
-		.panel-title {
-			font-size: 1.125em;
-		}
-	}
-
-	/*******************************************************************
-	* Admin pages
-	*/
-
-	.notification.new {
-		background: #5cb85c20;
-	}
-
-	.admin-page {
-		footer {
-			margin: 15px 0;
-		}
-	}
-
-	.actor-action + .ap-object .actor-box {
-		margin-left: 0;
-	}
-
-	/*******************************************************************
-	* Straight from main.scss
-	*/
-
-	.emoji, .custom-emoji {
-		max-width: 25px;
-	}
-
-	.show-more-wrapper {
-		.p-summary {
-			display: inline-block;
-		}
-		.show-more-btn {
-			margin-left: 5px;
-		}
-		summary {
-			display: inline-block;
-		}
-		summary::-webkit-details-marker {
-			display: none
-		}
-		
-		& .show-more-btn {
-			cursor: pointer;
-			color: $primary;
-			&:before {
-				font-family: 'Font Awesome 6 Free';
-			}
-		}
-		
-		&:not([open]) .show-more-btn::before {
-			content: '\f06e';
-		}
-		&[open] .show-more-btn::before {
-			content: '\f070';
-		}
-		
-		&:not([open]) .show-more-btn::after {
-			content: ' Show';
-		}
-		&[open] .show-more-btn::after {
-			content: ' Hide';
-		}
-	}
-	.sensitive-attachment {
-		display: inline-block;
-		.sensitive-attachment-state {
-			display: none;
-		}
-		.sensitive-attachment-state:checked ~ .sensitive-attachment-box div {
-			display:none;
-		}
-		.sensitive-attachment-box {
-			position: relative;
-			div {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				z-index: 10;
-				backdrop-filter: blur(2em);
-			}
-		}
-	}
-
-	.public-interactions {
-		display: flex;
-		flex-wrap: wrap;
-		margin: 15px 0;
-		column-gap: 15px;
-		.interactions-block {
-			flex: 0 1 30%;
-			max-width: 50%;
-			.facepile-wrapper {
-				display: flex;
-				flex-wrap: wrap;
-				row-gap: 2px;
-				column-gap: 2px;
-				a {
-					height: 40px;
-					img {
-						max-width: 40px;
-					}
-				}
-				.and-x-more {
-					display: inline-block;
-					align-self: center;
-				}
-			}
-		}
-	}
-
-	.interactions-title {
-		font-variant: small-caps;
+		left: 10px;
+		font-size: 2em;
 		color: $muted-text;
 	}
+	audio, video {
+		width: 100%;
+	}
+}
 
+.video-gif-overlay {
+	display: none;
+}
 
-	/*******
-	* This is awful, but Twig blocks the style attribute needed by the Bootstrap progress bar.
-	* Also requires Dart SASS, so won't work on sassc
-	*/
+.video-gif-mode + .video-gif-overlay {
+	display: block;
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	padding: 0 3px;
+	font-size: 0.8em;
+	background: rgba(0,0,0,.5);
+	color: #fff;
+}
 
+ul.poll-items {
+	padding-left: none;
+	list-style: none;
+	font-variant: small-caps;
+}
 
-	@for $i from 1 through 100 {
-		$val: $i + '%';
-		.pc-#{$i} {
-			width: #{$i} + '%';
+.panel {
+	font-size: 1.15em;
+	.btn {
+		font-size: 1.15em;
+	}
+	.panel-title {
+		font-size: 1.125em;
+	}
+}
+
+/*******************************************************************
+* Admin pages
+*/
+
+.notification.new {
+	background: #5cb85c20;
+}
+
+.admin-page {
+	footer {
+		margin: 15px 0;
+	}
+}
+
+.actor-action + .ap-object .actor-box {
+	margin-left: 0;
+}
+
+/*******************************************************************
+* Straight from main.scss
+*/
+
+.emoji, .custom-emoji {
+	max-width: 25px;
+}
+
+.show-more-wrapper {
+	.p-summary {
+		display: inline-block;
+	}
+	.show-more-btn {
+		margin-left: 5px;
+	}
+	summary {
+		display: inline-block;
+	}
+	summary::-webkit-details-marker {
+		display: none
+	}
+	
+	& .show-more-btn {
+		cursor: pointer;
+		color: $primary;
+		&:before {
+			font-family: 'Font Awesome 6 Free';
 		}
 	}
+	
+	&:not([open]) .show-more-btn::before {
+		content: '\f06e';
+	}
+	&[open] .show-more-btn::before {
+		content: '\f070';
+	}
+	
+	&:not([open]) .show-more-btn::after {
+		content: ' Show';
+	}
+	&[open] .show-more-btn::after {
+		content: ' Hide';
+	}
+}
+.sensitive-attachment {
+	display: inline-block;
+	.sensitive-attachment-state {
+		display: none;
+	}
+	.sensitive-attachment-state:checked ~ .sensitive-attachment-box div {
+		display:none;
+	}
+	.sensitive-attachment-box {
+		position: relative;
+		div {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			z-index: 10;
+			backdrop-filter: blur(2em);
+		}
+	}
+}
+
+.public-interactions {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 15px 0;
+	column-gap: 15px;
+	.interactions-block {
+		flex: 1 1 30%;
+		max-width: 50%;
+		.facepile-wrapper {
+			display: flex;
+			flex-wrap: wrap;
+			row-gap: 2px;
+			column-gap: 2px;
+			a {
+				height: 40px;
+				img {
+					max-width: 40px;
+				}
+			}
+			.and-x-more {
+				display: inline-block;
+				align-self: center;
+				color: $muted-text;
+				padding-left: 5px;
+			}
+		}
+	}
+}
+
+.interactions-title {
+	font-variant: small-caps;
+	color: $muted-text;
+}
+
+
+/*******
+* This is awful, but Twig blocks the style attribute needed by the Bootstrap progress bar.
+* Also requires Dart SASS, so won't work on sassc
+*/
+
+
+@for $i from 1 through 100 {
+	$val: $i + '%';
+	.pc-#{$i} {
+		width: #{$i} + '%';
+	}
+}
