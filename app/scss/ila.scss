@@ -442,20 +442,33 @@ meter, meter::-webkit-meter-bar {
 	overflow: hidden;
 	background-color: $background;
 	box-shadow: none;
+	border: none;
 }
 
 /*for meter bar*/
-meter::-webkit-meter-optimum-value, :-moz-meter-optimum::-moz-meter-bar {
+meter::-webkit-meter-optimum-value {
+	background: none;
+	background-color: $primary;
+}
+:-moz-meter-optimum::-moz-meter-bar {
 	background: none; 
 	background-color: $primary;
 }
 
-meter::-webkit-meter-suboptimum-value, :-moz-meter-sub-optimum::-moz-meter-bar {
+meter::-webkit-meter-suboptimum-value{
+	background: none; 
+	background-color: $warning;
+}
+:-moz-meter-sub-optimum::-moz-meter-bar{
 	background: none; 
 	background-color: $warning;
 }
 
-meter::-webkit-meter-even-less-good-value, :-moz-meter-sub-sub-optimum::-moz-meter-bar {
+meter::-webkit-meter-even-less-good-value{
 	background: none; 
+	background-color: $danger;
+}
+:-moz-meter-sub-sub-optimum::-moz-meter-bar{
+	background: none;
 	background-color: $danger;
 }
