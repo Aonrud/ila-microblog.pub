@@ -408,21 +408,32 @@
 
 {% macro display_og_meta(object) %}
 {% block display_og_meta scoped %}
-{% if object.og_meta %}
-{% for og_meta in object.og_meta[:1] %}
-<a href="{{ og_meta.url | privacy_replace_url }}" class="activity-og-meta card">
-    {% if og_meta.image %}
-        <div class="meta-img"><img src="{{ og_meta.image | media_proxy_url }}" /></div>
+    {% if object.og_meta %}
+        {# Don't show meta previews for these domains. #}
+        {% set domains = [ "twitter.com", "facebook.com" ] %}
+        
+        {% for og_meta in object.og_meta[:1] %}
+            {% set ns = namespace (show = True) %}
+            {% for domain in domains %}
+                {% if domain in og_meta.url %}
+                    {% set ns.show = False %}
+                {% endif %}
+            {% endfor %}
+            {% if ns.show == True %}
+                <a href="{{ og_meta.url | privacy_replace_url }}" class="activity-og-meta card">
+                    {% if og_meta.image %}
+                        <div class="meta-img"><img src="{{ og_meta.image | media_proxy_url }}" /></div>
+                    {% endif %}
+                    <div class="caption">
+                        <h4>{{ og_meta.title }}</h4>
+                        {% if og_meta.site_name %}
+                            <p class="text-muted">{{ og_meta.site_name }}</[>
+                        {% endif %}
+                    </div>
+                </a>
+            {% endif %}
+        {% endfor %}
     {% endif %}
-    <div class="caption">
-        <h4>{{ og_meta.title }}</h4>
-        {% if og_meta.site_name %}
-            <p class="text-muted">{{ og_meta.site_name }}</[>
-        {% endif %}
-    </div>
-</a>
-{% endfor %}
-{% endif %}
 {% endblock %}
 {% endmacro %}
 
