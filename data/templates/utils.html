@@ -688,29 +688,23 @@
             {% for item in object.poll_items %}
             <li>
                 {% set pct = item | poll_item_pct(object.poll_voters_count) %}
+                {% if can_vote %}
+                    <p>
+                        <input type="{% if object.is_one_of_poll %}radio{% else %}checkbox{% endif %}" name="name" value="{{ item.name }}" id="{{object.permalink_id}}-{{item.name}}-vote">
+                        <label for="{{object.permalink_id}}-{{item.name}}-vote">{{ item.name | clean_html(object) | safe }}</label>
+                            {% if object.voted_for_answers and item.name in object.voted_for_answers %}
+                                <span class="poll-vote">you voted for this answer</span>
+                            {% endif %}
+                        </label>
+                    </p>
+                {% endif %}
                 <p>
-                    {% if can_vote %}
-                    <input type="{% if object.is_one_of_poll %}radio{% else %}checkbox{% endif %}" name="name" value="{{ item.name }}" id="{{object.permalink_id}}-{{item.name}}">
-                    <label for="{{object.permalink_id}}-{{item.name}}">
-                    {% endif %}
- 
-                    {{ item.name | clean_html(object) | safe }}
-
-                    {% if object.voted_for_answers and item.name in object.voted_for_answers %}
-                    <span class="muted poll-vote">you voted for this answer</span>
-                    {% endif %}
-
-                    {% if can_vote %}
+                    <label id="{{object.permalink_id}}-{{item.name}}">
+                        {{ item.name | clean_html(object) | safe }}
+                        <span class="text-muted">{{ pct }}% ({{ item.replies.totalItems }} votes)</span>
                     </label>
-                    {% endif %}
-
-                    <span class="text-muted">{{ pct }}% <span class="muted">({{ item.replies.totalItems }} votes)</span></span>
+                    <meter id="{{object.permalink_id}}-{{item.name}}" min="0" max="100" value="{{ pct }}">{{ pct }}%</meter>
                 </p>
-                <div class="progress">
-                    <div class="progress-bar {{ 'pc-' ~ pct }}" role="progressbar" aria-valuenow="{{ pct }}" aria-valuemin="0" aria-valuemax="100">
-                        <span class="sr-only">{{ pct }}%</span>
-                    </div>
-                </div>
             </li>
             {% endfor %}
             </ul>

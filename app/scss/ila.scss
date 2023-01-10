@@ -13,6 +13,12 @@ $muted-link-hover: #666;
 $primary: #428bca;
 $primary-dark: #246;
 
+$success: #5cb85c;
+$info: #5bc0de;
+$warning: #f0ad4e;
+$danger: #d9534f;
+
+
 header.microblog {
 	background: top / cover no-repeat url('/static/header-3-2.png');
 	margin: 0 0 15px;
@@ -288,12 +294,6 @@ nav.flexbox {
 	color: #fff;
 }
 
-ul.poll-items {
-	padding-left: none;
-	list-style: none;
-	font-variant: small-caps;
-}
-
 .panel {
 	font-size: 1.15em;
 	.btn {
@@ -349,6 +349,7 @@ ul.poll-items {
 		color: $primary;
 		&:before {
 			font-family: 'Font Awesome 6 Free';
+			font-weight: 900; //Weight selects 'solid' icons
 		}
 	}
 	
@@ -420,16 +421,36 @@ ul.poll-items {
 	color: $muted-text;
 }
 
+/**
+ * Polls
+ */
 
-/*******
-* This is awful, but Twig blocks the style attribute needed by the Bootstrap progress bar.
-* Also requires Dart SASS, so won't work on sassc
-*/
-
-
-@for $i from 1 through 100 {
-	$val: $i + '%';
-	.pc-#{$i} {
-		width: #{$i} + '%';
+ul.poll-items {
+	padding-left: 0;
+	list-style: none;
+	label {
+		font-variant: small-caps;
+		font-weight: 400;
 	}
 }
+
+meter {
+	display: block;
+	width: 100%;
+	height: 1.5em;
+	background: none; //Reset
+	background-color: $background;
+	border: none;
+	border-radius: 4px;
+	&::-webkit-meter-optimum-value, &:-moz-meter-optimum::-moz-meter-bar {
+		background: $primary;
+	}
+	&::-webkit-meter-suboptimum-value, &:-moz-meter-sub-optimum::-moz-meter-bar {
+		background: $warning;
+	}
+}
+/*	meter::-webkit-meter-bar, meter::-moz-meter-bar {
+ * 
+ } **/
+
+
