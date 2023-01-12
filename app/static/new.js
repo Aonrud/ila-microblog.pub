@@ -1,5 +1,5 @@
 // The new post textarea
-var ta = document.getElementsByTagName("textarea")[0];
+const ta = document.getElementsByName("content")[0];
 // Helper for inserting text (emojis) in the textarea
 function insertAtCursor (textToInsert) {
     ta.focus();
@@ -20,33 +20,38 @@ function insertAtCursor (textToInsert) {
     }
 }
 // Emoji click callback func
-var ji = function (ev) {
+let ji = function (ev) {
     insertAtCursor(ev.target.attributes.alt.value + " ");
     ta.focus()
-    //console.log(document.execCommand('insertText', false /*no UI*/, ev.target.attributes.alt.value));
 }
+
 // Enable the click for each emojis
-var items = document.getElementsByClassName("ji")
-for (var i = 0; i < items.length; i++) {
+let items = document.getElementsByClassName("ji")
+for (let i = 0; i < items.length; i++) {
     items[i].addEventListener('click', ji);
 }
 
 // Add new input text dynamically to allow setting an alt text on attachments
-var files = document.getElementById("files");
-var alts = document.getElementById("alts");
+let files = document.getElementById("files");
+let alts = document.getElementById("alts");
 files.addEventListener("change", function(e) {
     // Reset the div content
     alts.innerHTML = "";
 
     // Add an input for each files
-    for (var i = 0; i < e.target.files.length; i++) {
-        var p = document.createElement("p");
-        var altInput = document.createElement("input");
-        altInput.setAttribute("type", "text");
-        altInput.setAttribute("name", "alt_" + e.target.files[i].name);
-        altInput.setAttribute("placeholder", "Alt text for " + e.target.files[i].name);
-        altInput.setAttribute("style", "width:95%;")
-        p.appendChild(altInput);
+    for (let i = 0; i < e.target.files.length; i++) {
+        const p = document.createElement("p");
+        
+        const label = document.createElement("label");
+        label.textContent = "Alt text (" + e.target.files[i].name + ")";
+        p.appendChild(label);
+        
+        const altEl = document.createElement("textarea");
+        altEl.setAttribute("name", "alt_" + e.target.files[i].name);
+        altEl.setAttribute("placeholder", "Alt text for " + e.target.files[i].name);
+        altEl.classList.add("form-control");
+        p.appendChild(altEl);
+        
         alts.appendChild(p);
     }
 });

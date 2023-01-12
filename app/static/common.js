@@ -20,12 +20,12 @@ function setVideoInGIFMode(video) {
     };
 }
 
-var items = document.getElementsByTagName("video")
-for (var i = 0; i < items.length; i++) {
-    if (items[i].duration) {
-        setVideoInGIFMode(items[i]);
+const videos = document.getElementsByTagName("video")
+for (var i = 0; i < videos.length; i++) {
+    if (videos[i].duration) {
+        setVideoInGIFMode(videos[i]);
     } else {
-        items[i].addEventListener("loadeddata", function() {
+        videos[i].addEventListener("loadeddata", function() {
             setVideoInGIFMode(this);
         });
     }
