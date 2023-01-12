@@ -66,11 +66,13 @@ header.microblog {
 }
 
 .ap-object {
+	position: relative;
 	border-bottom: 1px solid $border;
 	.h-entry div:last-child & {
 		border-bottom: none;
 	}
 	.actor-box {
+		margin-bottom: 15px;
 		display: flex;
 		column-gap: 15px;
 		.icon-box {
@@ -129,15 +131,11 @@ header.microblog {
 		max-width: 25px;
 	}
 
-.pinned {
-	position: relative;
-}
-
-.pin {
+.corner-meta {
 	position: absolute;
 	display: block;
-	top: 15px;
-	right: 15px;
+	top: 0;
+	right: 0;
 	color: $muted-text;
 }
 
@@ -153,11 +151,8 @@ nav.flexbox {
 		padding: 5px 0;
 		color: $muted-text;
 	}
-	li {
+	> * {
 		white-space: nowrap;
-		&:last-child {
-			margin-right: 0px;
-		}
 	}
 	a {
 		color: $muted-link;

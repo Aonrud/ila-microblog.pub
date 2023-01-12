@@ -510,18 +510,19 @@
         this post
     </a></p>
 
-    <div class="obj-content margin-top-20">
+    <div class="obj-content">
     <div class="e-content">
         {{ wm_reply.content | clean_html_wm | safe }}
     </div>
     </div>
 
-    <nav class="flexbox activity-bar margin-top-20">
+    <nav class="flexbox activity-bar">
     <ul>
         <li>
-            <div><a href="{{ wm_reply.url }}" rel="nofollow" class="object-permalink u-url u-uid">permalink</a></div>
+            <div><a href="{{ wm_reply.url }}" rel="nofollow" class="object-permalink u-url u-uid"><span class="fas fa-link"></span> permalink</a></div>
         </li>
         <li>
+            <span class="fas fa-clock"></span>
             <time class="dt-published" datetime="{{ wm_reply.published_at.replace(microsecond=0).isoformat() }}" title="{{ wm_reply.published_at.replace(microsecond=0).isoformat() }}">{{ wm_reply.published_at | timeago }}</time>
         </li>
         {% if is_admin %}
@@ -541,9 +542,42 @@
 {% set is_article_mode = object.is_from_outbox and object.ap_type == "Article" and is_object_page %}
 {% if object.ap_type in ["Note", "Article", "Video", "Page", "Question", "Event"] %}
 <div class="ap-object {% if expanded %}ap-object-expanded {% endif %}{% if is_h_entry %}h-entry{% endif %}{% if object.is_pinned %} pinned{% endif %}" id="{{ object.permalink_id }}">
-    {% if object.is_pinned %}
-        <div class="pin" title="Pinned Post"><i class="fas fa-thumbtack"></i></div>
-    {% endif %}
+    <div class="corner-meta">
+        <nav class="flexbox">
+            <ul>
+                <li>
+                    <div><a href="{{ object.url }}"{% if object.is_from_inbox %} rel="nofollow"{% endif %} class="object-permalink u-url u-uid"><span class="fas fa-link"></span> permalink</a></div>
+                </li>
+                {% if not is_article_mode %}
+                    <li>
+                        <span class="fas fa-clock"></span>
+                        <time class="dt-published" datetime="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}" title="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}">{{ object.ap_published_at | timeago }}</time>
+                    </li>
+                {% endif %}
+                {% if object.ap_type == "Question" %}
+                    {% if object.poll_end_time %}
+                        <li>
+                            {% if object.is_poll_ended %}ended{% else %}ends{% endif %}
+                            <time title="{{ object.poll_end_time.replace(microsecond=0).isoformat() }}">
+                                {{ object.poll_end_time | timeago }}
+                            </time>
+                        </li>
+                    {% endif %}
+                    <li>
+                        {{ object.poll_voters_count }} voters
+                    </li>
+                {% endif %}
+                {% if is_admin %}
+                    <li>
+                        {{ object.visibility.value }}
+                    </li>
+                {% endif %}
+                {% if object.is_pinned %}
+                    <li title="Pinned Post"><i class="fas fa-thumbtack"></i></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
 
     {% if is_article_mode %}
     <data class="h-card">
@@ -565,74 +599,45 @@
         <h2 class="p-name no-margin-top">{{ object.name }}</h2>
     {% endif %}
     
-    <nav class="flexbox">
-        <ul>
-            <li>
-                <div><a href="{{ object.url }}"{% if object.is_from_inbox %} rel="nofollow"{% endif %} class="object-permalink u-url u-uid">permalink</a></div>
-            </li>
+    {% if object.is_from_outbox or is_admin %}
+        <nav class="flexbox segmented">
+            <ul>
+                {% if object.is_from_outbox %}
+                    {% if object.likes_count %}
+                        <li>
+                            <a href="{{ object.url }}"><span class="far fa-star"></span> <strong>{{ object.likes_count }}</strong> like{{ object.likes_count | pluralize }}</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% if object.announces_count %}
+                        <li>
+                            <a href="{{ object.url }}"><span class="fas fa-repeat"></span> <strong>{{ object.announces_count }}</strong> share{{ object.announces_count | pluralize }}</a>
+                        </li>
+                    {% endif %}
 
-            {% if object.is_from_outbox and is_object_page and not is_admin and not request.url.path.startswith("/remote_interaction") %}
-                <li>
-                    <a class="label-btn" href="{{ request.url_for("remote_interaction") }}?ap_id={{ object.ap_id }}">
-                        interact from your instance
-                    </a>
-                </li>
-            {% endif %}
+                    {% if object.webmentions_count %}
+                        <li>
+                            <a href="{{ object.url }}"><span class="fas fa-comment"></span> <strong>{{ object.webmentions_count }}</strong> webmention{{ object.webmentions_count | pluralize }}</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
 
-
-            {% if not is_article_mode %}
-                <li>
-                    <time class="dt-published" datetime="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}" title="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}">{{ object.ap_published_at | timeago }}</time>
-                </li>
-            {% endif %}
-            {% if object.ap_type == "Question" %}
-                {% if object.poll_end_time %}
+                {% if object.replies_count %}
                     <li>
-                        {% if object.is_poll_ended %}ended{% else %}ends{% endif %}
-                        <time title="{{ object.poll_end_time.replace(microsecond=0).isoformat() }}">
-                            {{ object.poll_end_time | timeago }}
-                        </time>
+                        <a href="{% if is_admin and not object.is_from_outbox %}{{ url_for("admin_object") }}?ap_id={{ object.ap_id }}{% if object.in_reply_to %}#{{ object.permalink_id }}{% endif %}{% else %}{{ object.url }}{% endif %}#replies"><span class="fas fa-reply"></span> <strong>{{ object.replies_count }}</strong> repl{{ object.replies_count | pluralize("y", "ies") }}</a>
                     </li>
                 {% endif %}
-                <li>
-                    {{ object.poll_voters_count }} voters
-                </li>
-            {% endif %}
-            {% if is_admin %}
-                <li>
-                    {{ object.visibility.value }}
-                </li>
-            {% endif %}
-
-            {% if object.is_from_outbox %}
-                {% if object.likes_count %}
-                <li>
-                    <a href="{{ object.url }}"><strong>{{ object.likes_count }}</strong> like{{ object.likes_count | pluralize }}</a>
-                </li>
+                
+                {% if object.is_from_outbox and not is_admin and not request.url.path.startswith("/remote_interaction") %}
+                    <li>
+                        <a class="label-btn" href="{{ request.url_for("remote_interaction") }}?ap_id={{ object.ap_id }}">
+                            <span class="fas fa-arrows-turn-right"></span> Interact
+                        </a>
+                    </li>
                 {% endif %}
-
-                {% if object.announces_count %}
-                <li>
-                    <a href="{{ object.url }}"><strong>{{ object.announces_count }}</strong> share{{ object.announces_count | pluralize }}</a>
-                </li>
-                {% endif %}
-
-                {% if object.webmentions_count %}
-                <li>
-                    <a href="{{ object.url }}"><strong>{{ object.webmentions_count }}</strong> webmention{{ object.webmentions_count | pluralize }}</a>
-                </li>
-                {% endif %}
-
-            {% endif %}
-
-            {% if (object.is_from_outbox or is_admin) and object.replies_count %}
-            <li>
-                <a href="{% if is_admin and not object.is_from_outbox %}{{ url_for("admin_object") }}?ap_id={{ object.ap_id }}{% if object.in_reply_to %}#{{ object.permalink_id }}{% endif %}{% else %}{{ object.url }}{% endif %}#replies"><strong>{{ object.replies_count }}</strong> repl{{ object.replies_count | pluralize("y", "ies") }}</a>
-            </li>
-            {% endif %}
-
-        </ul>
-    </nav>
+            </ul>
+        </nav>
+    {% endif %}
 
     {% if object.ap_type == "Event" %}
         {% if object.ap_object.get("endTime") and object.ap_object.get("startTime") %}
