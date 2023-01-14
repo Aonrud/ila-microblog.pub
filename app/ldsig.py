@@ -23,6 +23,13 @@ requests_loader = pyld.documentloader.requests.requests_document_loader()
 def _loader(url, options={}):
     # See https://github.com/digitalbazaar/pyld/issues/133
     options["headers"]["Accept"] = "application/ld+json"
+
+    # XXX: temp fix/hack is it seems to be down for now
+    if url == "https://w3id.org/identity/v1":
+        url = (
+            "https://raw.githubusercontent.com/web-payments/web-payments.org"
+            "/master/contexts/identity-v1.jsonld"
+        )
     return requests_loader(url, options)
 
 
@@ -34,7 +41,7 @@ def _options_hash(doc: ap.RawObject) -> str:
     for k in ["type", "id", "signatureValue"]:
         if k in doc:
             del doc[k]
-    doc["@context"] = "https://raw.githubusercontent.com/web-payments/web-payments.org/master/contexts/identity-v1.jsonld"
+    doc["@context"] = "https://w3id.org/security/v1"
     normalized = jsonld.normalize(
         doc, {"algorithm": "URDNA2015", "format": "application/nquads"}
     )
