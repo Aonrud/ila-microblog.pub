@@ -301,6 +301,15 @@ nav.flexbox {
 * Admin pages
 */
 
+.login {
+	margin: 5em auto;
+	max-width: 25em;
+	background: $background;
+	border: 1px solid $border;
+	padding: 2em 2em calc(2em - 10px);
+	text-align: center;
+}
+
 .notification.new {
 	background: #5cb85c20;
 }

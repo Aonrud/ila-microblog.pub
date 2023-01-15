@@ -1,0 +1,23 @@
+{%- import "utils.html" as utils with context -%}
+{% extends "layout.html" %}
+
+{% block head %}
+    <meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
+{% block content %}
+<div class="login">
+    {% if error %}
+        <p class="primary-color">Invalid password.</p>
+    {% endif %}
+    <form class="form" action="{{ BASE_URL }}/admin/login" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="redirect" value="{{ redirect }}">
+        <p><input type="password" placeholder="password" name="password" autofocus class="form-control" /></p>
+        
+        <p><input type="submit" value="login" class="btn btn-primary" /></p>
+    </form>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

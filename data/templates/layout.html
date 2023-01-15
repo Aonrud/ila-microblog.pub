@@ -53,7 +53,9 @@
         </div>
     {% endif %}
     {% block content %}{% endblock %}
-    {% include "footer.html" %}
+    {% block footer %}
+        {% include "footer.html" %}
+    {% endblock %}
 </div>
 {% if is_admin %}
 <script src="{{ BASE_URL }}/static/common-admin.js?v={{ JS_HASH }}"></script>
