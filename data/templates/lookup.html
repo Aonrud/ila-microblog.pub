@@ -1,0 +1,41 @@
+{%- import "utils.html" as utils with context -%}
+{% extends "layout.html" %}
+
+{% block head %}
+<title>{{ local_actor.display_name }} - Lookup</title>
+{% endblock %}
+
+{% block content %}
+   
+    <div class="row">
+        <form action="{{ url_for("get_lookup") }}" method="GET" class="card col-sm-8 col-sm-offset-2">
+            <fieldset>
+                <legend>Interact with an ActivityPub object via its URL or look for a user using <i>@user@domain.tld</i></legend>
+                
+                {% if error %}
+                    <div class="alert alert-warning">
+                        <span class="fas fa-triangle-exclamation"></span>
+                        {% if error.value == "NOT_FOUND" %}
+                            The remote object is unavailable.
+                        {% elif error.value == "UNAUTHORIZED" %}
+                            Missing permissions to fetch the remote object.
+                        {% elif error.value == "TIMEOUT" %}
+                            Lookup timed out, please try refreshing the page.
+                        {% else %}
+                            Unexpected error, please check the logs and report an issue if needed.
+                        {% endif %}
+                    </div>
+                {% endif %}
+                
+                <p><input type="text" name="query" value="{{ query if query else "" }}" autofocus="" class="form-control"></p>
+                <p><input type="submit" value="Lookup" class="btn btn-primary"></p>
+            </fieldset>
+        </form>
+    </div>
+
+    {% if ap_object and ap_object.ap_type in actor_types %}
+    {{ utils.display_actor(ap_object, actors_metadata, with_details=True) }}
+    {% elif ap_object %}
+    {{ utils.display_object(ap_object, actors_metadata=actors_metadata) }}
+    {% endif %}
+{% endblock %}
