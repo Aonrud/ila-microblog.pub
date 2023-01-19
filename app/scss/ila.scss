@@ -139,6 +139,14 @@ header.microblog {
 	color: $muted-text;
 }
 
+@mixin meta-link {
+	color: $muted-link;
+	text-decoration: none;
+	&:hover, &:active, &.active {
+		color: $muted-link-hover;
+	}
+}
+
 nav.flexbox {
 	ul {
 		display: flex;
@@ -155,11 +163,7 @@ nav.flexbox {
 		white-space: nowrap;
 	}
 	a {
-		color: $muted-link;
-		text-decoration: none;
-		&:hover, &:active, &.active {
-			color: $muted-link-hover;
-		}
+		 @include meta-link;
 	}
 	&.public-top-menu {
 		ul {
@@ -181,6 +185,13 @@ nav.flexbox {
 				border-bottom: 1px solid $primary;
 			}
 		}
+	}
+}
+
+.post-meta {
+	color: $muted-text;
+	a {
+		@include meta-link;
 	}
 }
 

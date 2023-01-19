@@ -589,12 +589,6 @@
     {{ display_actor(object.actor, actors_metadata, embedded=True) }}
     {% endif %}
 
-    {% if object.in_reply_to %}
-    <p class="in-reply-to">in reply to <a href="{% if is_admin and object.is_in_reply_to_from_inbox %}{{ url_for("get_lookup") }}?query={% endif %}{{ object.in_reply_to }}" title="{{ object.in_reply_to }}" rel="nofollow">
-            this post
-        </a></p>
-    {% endif %}
-
     {% if object.ap_type in ["Article", "Event"] %}
         <h2 class="p-name no-margin-top">{{ object.name }}</h2>
     {% endif %}
@@ -663,6 +657,10 @@
 
     {% if is_article_mode %}
                 <time class="dt-published muted" datetime="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}" title="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}">{{ object.ap_published_at.strftime("%b %d, %Y") }}</time>
+    {% endif %}
+    
+    {% if object.in_reply_to %}
+        <p class="post-meta"><span class="fas fa-reply"></span> In reply to <a href="{% if is_admin and object.is_in_reply_to_from_inbox %}{{ url_for("get_lookup") }}?query={% endif %}{{ object.in_reply_to }}" title="{{ object.in_reply_to }}" rel="nofollow">this post</a></p>
     {% endif %}
 
     {% if object.summary %}
