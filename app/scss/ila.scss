@@ -100,6 +100,10 @@ header.microblog {
 			}
 		}
 	}
+	p {
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+	}
 }
 
 .ap-object-expanded {
