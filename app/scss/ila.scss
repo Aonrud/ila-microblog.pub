@@ -379,6 +379,11 @@ nav.flexbox {
 		content: ' Hide';
 	}
 }
+
+.show-hide-sensitive-btn {
+	cursor: pointer;
+}
+
 .sensitive-attachment {
 	display: inline-block;
 	.sensitive-attachment-state {
