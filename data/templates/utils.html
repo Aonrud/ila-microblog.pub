@@ -666,10 +666,7 @@
     {% if object.summary %}
     <details class="show-more-wrapper">
         <summary>
-            <div class="p-summary">
-                <p>{{ object.summary | clean_html(object) | safe }}</p>
-            </div>
-            <span class="show-more-btn" aria-hidden="true"></span>
+                <p>{{ object.summary | clean_html(object) | safe }} <span class="show-more-btn" aria-hidden="true"></span></p>
         </summary>
     {% endif %}
         <div class="obj-content">

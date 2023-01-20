@@ -348,20 +348,15 @@ nav.flexbox {
 }
 
 .show-more-wrapper {
-	.p-summary {
-		display: inline-block;
-	}
-	.show-more-btn {
-		margin-left: 5px;
-	}
 	summary {
 		display: inline-block;
 	}
 	summary::-webkit-details-marker {
-		display: none
+		display: none;
 	}
 	
-	& .show-more-btn {
+	.show-more-btn {
+		margin-left: 5px;
 		cursor: pointer;
 		color: $primary;
 		&:before {
