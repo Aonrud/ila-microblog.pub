@@ -1,0 +1,12 @@
+{
+  "name": "ILA Microblog.pub assets",
+  "description": "ILA Microblog.pub assets",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aonrud",
+  "license": "",
+  "dependencies": {
+    "ila-ui-elements": "Aonrud/ila-ui-elements#semver:0.5.1"
+  }
+} 
