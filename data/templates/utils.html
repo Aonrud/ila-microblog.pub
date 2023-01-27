@@ -461,7 +461,7 @@
 
         {% if attachment.type == "Image" or (attachment | has_media_type("image")) %}
             {% if attachment.url not in object.inlined_images %}
-                <img class="viewer" src="{{ attachment.resized_url or attachment.proxied_url }}"{% if attachment.name %} alt="{{ attachment.name }}"{% endif %} class="attachment u-photo" data-caption-id="content-{{ object.id }}" data-full="{{ attachment.proxied_url }}" />
+                <img class="viewer" src="{{ attachment.resized_url or attachment.proxied_url }}"{% if attachment.name %} alt="{{ attachment.name }}"{% endif %} class="attachment u-photo" data-caption-id="content-{{ object.id }}" data-full="{{ attachment.proxied_url }}" {% if object.sensitive %} data-reveal="true" {% endif %} />
             {% endif %}
         {% elif attachment.type == "Video" or (attachment | has_media_type("video")) %}
             <div class="video-wrapper">

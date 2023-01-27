@@ -7,6 +7,6 @@
   "author": "Aonrud",
   "license": "",
   "dependencies": {
-    "ila-ui-elements": "Aonrud/ila-ui-elements#semver:0.7.0"
+    "ila-ui-elements": "Aonrud/ila-ui-elements#semver:0.8.0"
   }
 } 

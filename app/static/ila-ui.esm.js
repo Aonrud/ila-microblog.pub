@@ -99,11 +99,36 @@ class Swipe {
 	}
 	
 	/**
-	 * swiped event.
+	 * Event dispatched by any swipe.
+	 * @public
 	 * @event Swipe#swiped
 	 * @type {object}
-	 * @property {object} details
-	 * @property {string} details.direction - The direction of the swipe action.
+	 * @property {object} detail
+	 * @property {string} detail.direction - The direction of the swipe action.
+	 */
+	
+	/**
+	 * Event dispatched on swipe up.
+	 * @public
+	 * @event Swipe#swiped-up
+	 */
+	
+	/**
+	 * Event dispatched on swipe down.
+	 * @public
+	 * @event Swipe#swiped-down
+	 */
+	
+	/**
+	 * Event dispatched on swipe left.
+	 * @public
+	 * @event Swipe#swiped-left
+	 */
+	
+	/**
+	 * Event dispatched on swipe right.
+	 * @public
+	 * @event Swipe#swiped-right
 	 */
 	
 	/**
@@ -401,6 +426,8 @@ class Scroller {
  * @property {string} [texts.download = ⮋]
  * @property {string} [texts.prev = ⮈]
  * @property {string} [texts.next = ⮊]
+ * @property {string} [texts.reveal = ᴑ]
+ * @property {string} [texts.revealActive = ᴓ]
  * @property {string} [texts.link = ⛓]
  * @property {string} [texts.zoom = 🞕]
  * @property {string} [texts.zoomActive = 🞔]
@@ -411,6 +438,8 @@ class Scroller {
  * @property {string} [titles.download = Download this image]
  * @property {string} [titles.prev = Previous image]
  * @property {string} [titles.next = Next image]
+ * @property {string} [titles.reveal = Reveal image]
+ * @property {string} [titles.revealActive = Re-hide image]
  * @property {string} [titles.link = More information]
  * @property {string} [titles.zoom = Enlarge image (drag to move the image around)]
  * @property {string} [titles.zoomActive = Reset image to fit screen] 
@@ -419,13 +448,15 @@ class Scroller {
 
 /**
  * The available buttons which can be set in the Image Viewer configuration.
- * Note that zoom has an additional 'active' and 'disabled' state setting.
+ * Note that reveal and zoom have additional 'active' states, and zoom also has a 'disabled' state.
  * @typedef {object} imageViewerButtons
  * @property {string} [cue] - The cue shown when hovering over an image to indicate the viewer is available.
  * @property {string} [hide] - The button to hide/close the viewer
  * @property {string} [download] - The button to download the current image in the viewer
  * @property {string} [prev] - The button to show the previous image
  * @property {string} [next] - The button to show the next image 
+ * @property {string} [reveal] - The button to reveal a blurred image
+ * @property {string} [revealActive] - The button to hide turn off reveal - i.e. re-blur the image.
  * @property {string} [link] - The button for the image's link
  * @property {string} [zoom] - The button to zoom the image to full size and activate panning
  * @property {string} [zoomActive] - Properties for the zoom button when it's active
@@ -448,6 +479,8 @@ const defaultImageViewerConfig = {
 		download: "⮋",
 		prev: "⮈",
 		next: "⮊",
+		reveal: "ᴑ",
+		revealActive: "ᴓ",
 		link: "⛓",
 		zoom: "🞕",
 		zoomActive: "🞔",
@@ -458,6 +491,8 @@ const defaultImageViewerConfig = {
 		download: "",
 		prev: "",
 		next: "",
+		reveal: "",
+		revealActive: "",
 		link: "",
 		zoom: "",
 		zoomActive: "",
@@ -468,6 +503,8 @@ const defaultImageViewerConfig = {
 		download: "Download this image",
 		prev: "Previous image",
 		next: "Next image",
+		reveal: "Reveal image",
+		revealActive: "Blur image",
 		link:  "More information",
 		zoom: "Enlarge image (drag to move the image around)",
 		zoomActive: "Reset image to fit screen",
@@ -583,6 +620,7 @@ class ImageViewer {
 			el.alt = img.getAttribute("alt");
 			this._loader.style.visibility = "hidden";
 			this._updateCaption(n);
+			this.revealToggle(!img.dataset.hasOwnProperty("reveal") || !img.dataset.reveal == 'true');
 			this._updateControls();
 		}
 	}
@@ -670,6 +708,17 @@ class ImageViewer {
 		e.currentTarget.classList.toggle("zoomed");
 	}
 	
+	/** 
+	 * Handle click events for toggling the reveal status
+	 * @protected
+	 * @param {HTMLElement} e The click event
+	 */
+	reveal(e) {
+		const state = this._imgDisplay.style.filter.includes("blur");
+		this.revealToggle(state);
+		this.btnToggle(e.currentTarget, state);
+	}
+	
 	/**
 	 * Toggle the specified button on or off as specified
 	 * @protected
@@ -713,6 +762,23 @@ class ImageViewer {
 		pz.setStyle("cursor", "auto");
 		pz.destroy();
 	}
+	
+	/**
+	 * Set the reveal state.
+	 * @public
+	 * @param {boolean} [reveal = true]
+	 */
+	revealToggle(reveal = true) {
+		const caption = this._overlay.querySelector(".caption");
+		
+		if (reveal) {
+			this._imgDisplay.style.filter = "";
+			caption.style.color = "";
+		} else {
+			this._imgDisplay.style.filter = "blur(1em)";
+			caption.style.color = getComputedStyle(caption).getPropertyValue('background-color');
+		}
+	}
 
 	/**
 	 * Create the overlay and insert in the document
@@ -750,6 +816,7 @@ class ImageViewer {
 				
 		this._overlay = overlay;
 		this._imgDisplay = activeImg;
+		this._caption = caption;
 		this._loader = loader;
 		this._active = false;
 				
@@ -812,6 +879,8 @@ class ImageViewer {
 		if (this._images.length > 1) {
 			btns.push("next", "prev");
 		}
+		btns.push("reveal");
+		
 		const anchors = [ "download", "link" ];
 		
 		for (const b of btns) {
@@ -853,6 +922,14 @@ class ImageViewer {
 				btnLink.style.display = "none";
 			}
 		}
+		
+		const btnReveal = document.getElementById("btn-reveal");
+		if (this._images[i].dataset.reveal == 'true') {
+			btnReveal.style.display = "block";
+		} else {
+			btnReveal.style.display = "none";
+		}
+			
 		
 		if (this._config.panzoom) {
 			console.log(`Shown: ${img.width}; Actual: ${img.naturalWidth}`);
