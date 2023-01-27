@@ -1,5 +1,5 @@
 /*! ILA UI Elements
- *Copyright (C) 2021-2022 Aonghus Storey
+ *Copyright (C) 2021–2023 Aonghus Storey
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,6 +65,71 @@ function makeButton(name, css = "", text = "", title = "", icon = "", handler = 
     if (element === "button") el.setAttribute("type", "button");
     if (handler) el.addEventListener("click", handler);
     return el;    
+}
+
+/**
+ * Adds custom swipe events to a given element.
+ * 
+ * When instantiated, a `swiped-[DIRECTION]` event will be dispatched when that element is swiped.
+ * A `swiped` event is also dispatched with the direction in the customEvent.detail, to allow for a single listener if needed.
+ * 
+ * @public
+ * @param {HTMLElement} el The element on which to listen for swipe events.
+ * @fires Swipe#swiped
+ * @fires Swipe#swiped-up
+ * @fires Swipe#swiped-down
+ * @fires Swipe#swiped-left
+ * @fires Swipe#swiped-right
+ */
+class Swipe {
+	
+	constructor(el) {
+		this._el = el;
+		el.addEventListener('touchstart',
+			e => {
+				this.startX = e.changedTouches[0].clientX;
+				this.startY = e.changedTouches[0].clientY;
+			});
+		el.addEventListener('touchend',
+			e => {
+				this.endX = e.changedTouches[0].clientX;
+				this.endY = e.changedTouches[0].clientY;
+				this._sendEvents();
+			});
+	}
+	
+	/**
+	 * swiped event.
+	 * @event Swipe#swiped
+	 * @type {object}
+	 * @property {object} details
+	 * @property {string} details.direction - The direction of the swipe action.
+	 */
+	
+	/**
+	 * Emits events when a swipe action has occurred.
+	 * @protected
+	 */
+	_sendEvents() {
+		const extentX = this.endX - this.startX;
+		const extentY = this.endY - this.startY;
+		let dir = null;
+		
+		//Horizontal
+		if (Math.abs(extentX) > Math.abs(extentY)) {
+			dir = extentX > 0 ? "right" : "left";
+		}
+		
+		//Vertical
+		if (Math.abs(extentX) < Math.abs(extentY)) {
+			dir = extentY > 0 ? "down" : "up";
+		}
+		
+		if (dir) {
+			this._el.dispatchEvent( new CustomEvent('swiped', { detail: { direction: dir } }) );
+			this._el.dispatchEvent( new CustomEvent(`swiped-${dir}`) );
+		}
+	}
 }
 
 /**
@@ -157,6 +222,10 @@ class Scroller {
 		this._sizes();
 		
 		window.addEventListener('resize', this);
+		
+		new Swipe(this._wrapper);
+		this._wrapper.addEventListener('swiped-right', () => this.left() );
+		this._wrapper.addEventListener('swiped-left', e => this.right() );
 	}
 	
 	/**
@@ -674,6 +743,11 @@ class ImageViewer {
 		overlay.append(this._createControls());
 		overlay.addEventListener("keydown", (e) => this._shortcutsEventListener(e));
 		
+		new Swipe(overlay);
+		overlay.addEventListener('swiped-right', () => this.prev() );
+		overlay.addEventListener('swiped-left', e => this.next() );
+		overlay.addEventListener('swiped-up', e => this.hide() );
+				
 		this._overlay = overlay;
 		this._imgDisplay = activeImg;
 		this._loader = loader;
@@ -823,4 +897,92 @@ class ImageViewer {
 	}
 }
 
-export { ImageViewer, Scroller };
+/** 
+ * A simple animated visibility toggler.
+ * @public
+ * @param {HTMLElement} source The element which triggers the toggle, e.g. a `<button>`
+ * @param {HTMLElement|null} [target = null] The element of which to toggle the visibility.
+ * 						If omitted, the `data-toggle-target` attribute of the source will be checked for an ID.
+ * 						If neither is provided, an error is thrown.
+ * @param {string} [toggleText = ''] The replacement text for the source when its state is toggled.
+ * 						If omitted, the `data-toggle-text` attribute of the source will be used.
+ * 						If neither is provided, the source text remains static.
+ */
+class Toggler {
+	
+	constructor(source, target = null, toggleText = null) {
+		this._source = source;
+		try {
+			this._target = ( target instanceof HTMLElement ? target : document.getElementById(source.dataset.toggleTarget) );
+		} catch {
+			throw new Error(`Invalid target set. The target element must be provided either directly or with a data attribute`);
+		}
+		this._target.classList.add('toggle-view');
+		
+		try {
+			this._toggleText = ( toggleText ? toggleText : source.dataset.toggleText );
+		} catch {
+			console.log("No toggle text");
+		}
+		this._sourceTextTarget = ( this._source.querySelector(".toggle-text") ? this._source.querySelector(".toggle-text") : this._source );
+		this._origText = this._sourceTextTarget.textContent;
+		
+		this._source.addEventListener("click", () => this.toggle() );
+	}
+	
+	/**
+	 * Toggle the state of the target.
+	 * @public
+	 */
+	toggle() {
+		if (this._target.classList.contains('visible')) {
+			this.hide();
+			return;
+		}
+		this.show();
+	}
+	
+	/**
+	 * Show the target.
+	 * @public
+	 */
+	show() {
+		const target = this._target;
+		const height = this._checkHeight(target);
+		
+		if (this._toggleText) this._sourceTextTarget.textContent = this._toggleText;
+		
+		target.classList.add("visible");
+		target.style.height = height;
+		
+		setTimeout( () => target.style.height = '', 250);
+	}
+	
+	/**
+	 * Hide the target.
+	 * @public
+	 */
+	hide() {
+		const target = this._target;
+		
+		if (this._toggleText) this._sourceTextTarget.textContent = this._origText;
+		
+		target.style.height = target.scrollHeight + "px";
+		setTimeout( () => target.style.height = 0, 1);
+		setTimeout( () => target.classList.remove("visible"), 250);
+	}
+	
+	/**
+	 * Check the auto height of an element.
+	 * @protected
+	 * @param {HTMLElement} el
+	 */
+	_checkHeight(el) {
+		el.style.display = 'block';
+		const h = el.scrollHeight + "px";
+		el.style.display = '';
+		return h;
+	}
+}
+
+export { ImageViewer, Scroller, Toggler };
