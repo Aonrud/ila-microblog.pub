@@ -552,19 +552,6 @@
                         <time class="dt-published" datetime="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}" title="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}">{{ object.ap_published_at | timeago }}</time>
                     </li>
                 {% endif %}
-                {% if object.ap_type == "Question" %}
-                    {% if object.poll_end_time %}
-                        <li>
-                            {% if object.is_poll_ended %}ended{% else %}ends{% endif %}
-                            <time title="{{ object.poll_end_time.replace(microsecond=0).isoformat() }}">
-                                {{ object.poll_end_time | timeago }}
-                            </time>
-                        </li>
-                    {% endif %}
-                    <li>
-                        {{ object.poll_voters_count }} voters
-                    </li>
-                {% endif %}
                 {% if is_admin %}
                     <li>
                         {{ object.visibility.value }}
@@ -629,6 +616,26 @@
                 {% endif %}
             </ul>
         </nav>
+    {% endif %}
+    
+    {% if object.ap_type == "Question" %}
+        <div class="flexbox segmented">
+            <ul>
+                {% if object.poll_end_time %}
+                    <li>
+                        <span class="fas fa-bars-progress"></span>
+                        {% if object.is_poll_ended %}ended{% else %}ends{% endif %}
+                        <time title="{{ object.poll_end_time.replace(microsecond=0).isoformat() }}">
+                            {{ object.poll_end_time | timeago }}
+                        </time>
+                    </li>
+                {% endif %}
+                <li>
+                    <span class="fas fa-check-to-slot"></span>
+                    {{ object.poll_voters_count }} voters
+                </li>
+            </ul>
+        </div>
     {% endif %}
 
     {% if object.ap_type == "Event" %}
