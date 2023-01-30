@@ -69,8 +69,9 @@ function makeButton(name, css = "", text = "", title = "", icon = "", handler = 
 
 /**
  * Adds custom swipe events to a given element.
+ * Call the attach() method to add the event listeners, and detach() to remove it.
  * 
- * When instantiated, a `swiped-[DIRECTION]` event will be dispatched when that element is swiped.
+ * When attached, a `swiped-[DIRECTION]` event will be dispatched when that element is swiped.
  * A `swiped` event is also dispatched with the direction in the customEvent.detail, to allow for a single listener if needed.
  * 
  * @public
@@ -85,17 +86,41 @@ class Swipe {
 	
 	constructor(el) {
 		this._el = el;
-		el.addEventListener('touchstart',
-			e => {
-				this.startX = e.changedTouches[0].clientX;
-				this.startY = e.changedTouches[0].clientY;
-			});
-		el.addEventListener('touchend',
-			e => {
-				this.endX = e.changedTouches[0].clientX;
-				this.endY = e.changedTouches[0].clientY;
-				this._sendEvents();
-			});
+	}
+	
+	/**
+	 * Attach the event listeners
+	 * @public
+	 */
+	attach() {
+		this._el.addEventListener('touchstart', this);
+		this._el.addEventListener('touchend', this);
+	}
+	
+	/**
+	 * Detach the event listeners
+	 * @public
+	 */
+	detach() {
+		this._el.removeEventListener('touchstart', this);
+		this._el.removeEventListener('touchend', this);
+	}
+	
+	/**
+	 * Handle touchstart and touchend events
+	 * @protected
+	 * @param {Event} e
+	 */
+	handleEvent(e) {
+		if (e.type == 'touchstart') {
+			this.startX = e.changedTouches[0].clientX;
+			this.startY = e.changedTouches[0].clientY;
+		}
+		if (e.type == 'touchend') {
+			this.endX = e.changedTouches[0].clientX;
+			this.endY = e.changedTouches[0].clientY;
+			this._sendEvents();
+		}
 	}
 	
 	/**
@@ -248,7 +273,8 @@ class Scroller {
 		
 		window.addEventListener('resize', this);
 		
-		new Swipe(this._wrapper);
+		const swipe = new Swipe(this._wrapper);
+		swipe.attach();
 		this._wrapper.addEventListener('swiped-right', () => this.left() );
 		this._wrapper.addEventListener('swiped-left', e => this.right() );
 	}
@@ -752,11 +778,14 @@ class ImageViewer {
 		const pz = this._pzInstance;
 		
 		if (switchOn) {
+			//Turn off swipe actions when zoomed to prevent over-riding Panzoom movements
+			this._swipe.detach();
 			this._imgDisplay.classList.add("pan");
 			pz.bind();
 			pz.setStyle("cursor", "move");
 			return;
 		}
+		this._swipe.attach();
 		this._imgDisplay.classList.remove("pan");
 		pz.reset({ animate: false });
 		pz.setStyle("cursor", "auto");
@@ -809,10 +838,11 @@ class ImageViewer {
 		overlay.append(this._createControls());
 		overlay.addEventListener("keydown", (e) => this._shortcutsEventListener(e));
 		
-		new Swipe(overlay);
-		overlay.addEventListener('swiped-right', () => this.prev() );
-		overlay.addEventListener('swiped-left', e => this.next() );
-		overlay.addEventListener('swiped-up', e => this.hide() );
+		this._swipe = new Swipe(imgWrap);
+		this._swipe.attach();
+		imgWrap.addEventListener('swiped-right', () => this.prev() );
+		imgWrap.addEventListener('swiped-left', () => this.next() );
+		imgWrap.addEventListener('swiped-up', () => this.hide() );
 				
 		this._overlay = overlay;
 		this._imgDisplay = activeImg;
