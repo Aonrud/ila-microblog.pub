@@ -624,7 +624,7 @@
                 {% if object.poll_end_time %}
                     <li>
                         <span class="fas fa-bars-progress"></span>
-                        {% if object.is_poll_ended %}ended{% else %}ends{% endif %}
+                        {% if object.is_poll_ended %}Ended{% else %}Ends{% endif %}
                         <time title="{{ object.poll_end_time.replace(microsecond=0).isoformat() }}">
                             {{ object.poll_end_time | timeago }}
                         </time>
