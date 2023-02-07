@@ -10,6 +10,8 @@ from fastapi import Form
 from fastapi import HTTPException
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBasic
+from fastapi.security import HTTPBasicCredentials
 from loguru import logger
 from pydantic import BaseModel
 from sqlalchemy import select
@@ -26,6 +28,8 @@ from app.redirect import redirect
 from app.utils import indieauth
 from app.utils.datetime import now
 
+basic_auth = HTTPBasic()
+
 router = APIRouter()
 
 
@@ -41,6 +45,7 @@ async def well_known_authorization_server(
         "revocation_endpoint": request.url_for("indieauth_revocation_endpoint"),
         "revocation_endpoint_auth_methods_supported": ["none"],
         "registration_endpoint": request.url_for("oauth_registration_endpoint"),
+        "introspection_endpoint": request.url_for("oauth_introspection_endpoint"),
     }
 
 
@@ -378,6 +383,8 @@ async def _check_access_token(
 class AccessTokenInfo:
     scopes: list[str]
     client_id: str | None
+    access_token: str
+    exp: int
 
 
 async def verify_access_token(
@@ -409,6 +416,13 @@ async def verify_access_token(
             if access_token.indieauth_authorization_request
             else None
         ),
+        access_token=access_token.access_token,
+        exp=int(
+            (
+                access_token.created_at.replace(tzinfo=timezone.utc)
+                + timedelta(seconds=access_token.expires_in)
+            ).timestamp()
+        ),
     )
 
 
@@ -433,6 +447,13 @@ async def check_access_token(
             access_token.indieauth_authorization_request.client_id
             if access_token.indieauth_authorization_request
             else None
+        ),
+        access_token=access_token.access_token,
+        exp=int(
+            (
+                access_token.created_at.replace(tzinfo=timezone.utc)
+                + timedelta(seconds=access_token.expires_in)
+            ).timestamp()
         ),
     )
 
@@ -472,5 +493,60 @@ async def indieauth_revocation_endpoint(
 
     return JSONResponse(
         content={},
+        status_code=200,
+    )
+
+
+@router.post("/token_introspection")
+async def oauth_introspection_endpoint(
+    request: Request,
+    credentials: HTTPBasicCredentials = Depends(basic_auth),
+    db_session: AsyncSession = Depends(get_db_session),
+    token: str = Form(),
+) -> JSONResponse:
+    registered_client = (
+        await db_session.scalars(
+            select(models.OAuthClient).where(
+                models.OAuthClient.client_id == credentials.username,
+                models.OAuthClient.client_secret == credentials.password,
+            )
+        )
+    ).one_or_none()
+    if not registered_client:
+        raise HTTPException(status_code=401, detail="unauthenticated")
+
+    access_token = (
+        await db_session.scalars(
+            select(models.IndieAuthAccessToken)
+            .where(models.IndieAuthAccessToken.access_token == token)
+            .join(
+                models.IndieAuthAuthorizationRequest,
+                models.IndieAuthAccessToken.indieauth_authorization_request_id
+                == models.IndieAuthAuthorizationRequest.id,
+            )
+            .where(
+                models.IndieAuthAuthorizationRequest.client_id == credentials.username
+            )
+        )
+    ).one_or_none()
+    if not access_token:
+        return JSONResponse(content={"active": False})
+
+    is_token_valid, _ = await _check_access_token(db_session, token)
+    if not is_token_valid:
+        return JSONResponse(content={"active": False})
+
+    return JSONResponse(
+        content={
+            "active": True,
+            "client_id": credentials.username,
+            "scope": access_token.scope,
+            "exp": int(
+                (
+                    access_token.created_at.replace(tzinfo=timezone.utc)
+                    + timedelta(seconds=access_token.expires_in)
+                ).timestamp()
+            ),
+        },
         status_code=200,
     )
