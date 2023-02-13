@@ -19,6 +19,15 @@ $warning: #f0ad4e;
 $danger: #d9534f;
 
 
+.flex {
+	display: flex;
+}
+
+.flexcol {
+	@extend .flex;
+	flex-direction: column;
+}
+
 header.microblog {
 	background: top / cover no-repeat url('/static/header-3-2.jpeg');
 	margin: 0 0 15px;
@@ -77,33 +86,33 @@ header.microblog {
 		column-gap: 15px;
 		.icon-box {
 			flex: 0 0 50px;
-			border-top-left-radius: 4px;
 		}
 		.actor-icon {
 			max-width: 50px;
 		}
-		a.u-url {
-			font-size: 1.15em;
-			margin-top: 5px;
+		& > div {
 			flex: 1;
-			.actor-handle {
-				color: $muted-link;
-			}
-			&:hover, &:active {
-				text-decoration: none;
-				strong {
-					text-decoration: underline;
-				}
-				.actor-handle {
-					color: $muted-link-hover;
-				}
-			}
+			@extend .flexcol;
+		}
+		a.u-url {
+			flex: 1;
+			font-size: 1.15em;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		nav.flexbox ul {
+			padding: 0;
 		}
 	}
 	p {
 		overflow-x: hidden;
 		text-overflow: ellipsis;
 	}
+}
+
+.actor-handle {
+	color: $muted-link;
 }
 
 .ap-object-expanded {
@@ -134,14 +143,6 @@ header.microblog {
 .tiny-actor-icon {
 		max-width: 25px;
 	}
-
-.corner-meta {
-	position: absolute;
-	display: block;
-	top: 0;
-	right: 0;
-	color: $muted-text;
-}
 
 @mixin meta-link {
 	color: $muted-link;

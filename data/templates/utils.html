@@ -226,8 +226,6 @@
 {% endblock %}
 {% endmacro %}
 
-
-
 {% macro admin_profile_button(ap_actor_id) %}
 {% block admin_profile_button scoped %}
 <form action="{{ url_for("admin_profile") }}"  method="GET">
@@ -540,38 +538,45 @@
 {% set is_article_mode = object.is_from_outbox and object.ap_type == "Article" and is_object_page %}
 {% if object.ap_type in ["Note", "Article", "Video", "Page", "Question", "Event"] %}
 <div class="ap-object {% if expanded %}ap-object-expanded {% endif %}{% if is_h_entry %}h-entry{% endif %}{% if object.is_pinned %} pinned{% endif %}" id="{{ object.permalink_id }}">
-    <div class="corner-meta">
-        <nav class="flexbox">
-            <ul>
-                <li>
-                    <div><a href="{{ object.url }}"{% if object.is_from_inbox %} rel="nofollow"{% endif %} class="object-permalink u-url u-uid"><span class="fas fa-link"></span> permalink</a></div>
-                </li>
-                {% if not is_article_mode %}
-                    <li>
-                        <span class="fas fa-clock"></span>
-                        <time class="dt-published" datetime="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}" title="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}">{{ object.ap_published_at | timeago }}</time>
-                    </li>
-                {% endif %}
-                {% if is_admin %}
-                    <li>
-                        {{ object.visibility.value }}
-                    </li>
-                {% endif %}
-                {% if object.is_pinned %}
-                    <li title="Pinned Post"><i class="fas fa-thumbtack"></i></li>
-                {% endif %}
-            </ul>
-        </nav>
+    <div class="actor-box h-card p-author">
+        <div class="icon-box">
+            <img src="{{ object.actor.resized_icon_url }}" alt="{{ object.actor.display_name }}'s avatar" class="actor-icon u-photo">
+        </div>
+        <div>
+            <div class="flex">
+                <a href="{{ object.actor.url }}" class="u-url"><strong>{{ object.actor.display_name | clean_html(object.actor) | safe  }}</strong></a>
+                <nav class="flexbox">
+                    <ul>
+                        <li>
+                            <div><a href="{{ object.url }}"{% if object.is_from_inbox %} rel="nofollow"{% endif %} class="object-permalink u-url u-uid"><span class="fas fa-link"></span> permalink</a></div>
+                        </li>
+                        {% if not is_article_mode %}
+                            <li>
+                                <span class="fas fa-clock"></span>
+                                <time class="dt-published" datetime="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}" title="{{ object.ap_published_at.replace(microsecond=0).isoformat() }}">{{ object.ap_published_at | timeago }}</time>
+                            </li>
+                        {% endif %}
+                        {% if is_admin %}
+                            <li>
+                                {{ object.visibility.value }}
+                            </li>
+                        {% endif %}
+                        {% if object.is_pinned %}
+                            <li title="Pinned Post"><i class="fas fa-thumbtack"></i></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            <div class="actor-handle p-name">{{ object.actor.handle }}</div>
+        </div>
     </div>
 
     {% if is_article_mode %}
-    <data class="h-card">
-        <data class="u-photo" value="{{ local_actor.icon_url }}"></data>
-        <data class="u-url" value="{{ local_actor.url}}"></data>
-        <data class="p-name" value="{{ local_actor.handle }}"></data>
-    </data>
-    {% else %}
-    {{ display_actor(object.actor, actors_metadata, embedded=True) }}
+        <data class="h-card">
+            <data class="u-photo" value="{{ local_actor.icon_url }}"></data>
+            <data class="u-url" value="{{ local_actor.url}}"></data>
+            <data class="p-name" value="{{ local_actor.handle }}"></data>
+        </data>
     {% endif %}
 
     {% if object.ap_type in ["Article", "Event"] %}
