@@ -28,6 +28,7 @@ class OpenGraphMeta(BaseModel):
     url: str
     title: str
     image: str | None
+    image__alt: str | None
     description: str | None
     site_name: str
 
@@ -47,11 +48,12 @@ def _scrap_og_meta(url: str, html: str) -> OpenGraphMeta | None:
         "url": url,
         "title": soup.find("title").text.strip(),
         "image": None,
+        "image__alt": None,
         "description": None,
         "site_name": urlparse(url).hostname,
     }
     for field in OpenGraphMeta.__fields__.keys():
-        og_field = f"og:{field}"
+        og_field = f"og:{field.replace('__',':')}"
         if ogs.get(og_field):
             raw[field] = ogs.get(og_field, None)
 
