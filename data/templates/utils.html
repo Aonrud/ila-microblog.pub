@@ -417,7 +417,10 @@
                     {% set ns.show = False %}
                 {% endif %}
             {% endfor %}
-            {% if ns.show == True %}
+            {# Custom case to embed the ILA Podcast #}
+            {% if 'https://podcast.leftarchive.ie/@ILAPodcast/episodes/' in og_meta.url %}
+                <iframe src="{{ og_meta.url}}/embed" scrolling="no" frameborder="0" width="100%">            
+            {% elif ns.show == True %}
                 <a href="{{ og_meta.url | privacy_replace_url }}" class="activity-og-meta card">
                     {% if og_meta.image %}
                         <div class="meta-img"><img src="{{ og_meta.image | media_proxy_url }}" /></div>
