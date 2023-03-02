@@ -254,8 +254,9 @@ header.microblog {
 .activity-attachment {
 	position: relative;
 	display: flex;
-	padding-left: 50px;
-	max-width: 100%;
+	padding-left: 65px;
+	margin-left: -65px;
+	max-width: calc(100% + 65px);
 	flex-wrap: wrap;
 	&.single {
 		.attachment-item, .attachment-wrapper {
