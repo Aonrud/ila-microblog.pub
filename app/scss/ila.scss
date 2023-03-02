@@ -248,6 +248,8 @@ header.microblog {
 	}
 	.caption {
 		overflow: hidden;
+		flex-grow: 1;
+		background: $background;
 		h4 {
 			white-space: nowrap;
 			overflow: hidden;
