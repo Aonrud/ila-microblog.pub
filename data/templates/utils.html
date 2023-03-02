@@ -742,7 +742,7 @@
 
     {% if object.attachments %}
         <div class="activity-attachment card {% if object.attachments|length == 1 %} single{% endif %}">
-            <div class="icon"><i class="fas fa-paperclip"></i></div>
+            <div class="ap-indent-icon"><i class="fas fa-paperclip"></i></div>
             {{ display_attachments(object) }}
         </div>
     {% endif %}

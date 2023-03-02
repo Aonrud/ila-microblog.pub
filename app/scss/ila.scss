@@ -62,6 +62,7 @@ header.microblog {
 }
 
 .h-entry {
+	position: relative;
 	border-bottom: 1px solid $border;
 	margin: 15px 0;
 	font-size: 1.15em;
@@ -126,18 +127,19 @@ header.microblog {
 	padding: 0;
 	border-left: 0;
 	font-size: 1em;
-	div.quote {
-		position: absolute;
-		left: 40px;
-		font-size: 1.5em;
-		color: $muted-text;
-	}
 	p {
 		font-size: 1em;
 	}
 	.ap-object {
 		border-bottom: 0;
 	}
+}
+
+.ap-indent-icon {
+	position: absolute;
+	left: 30px;
+	font-size: 1.5em;
+	color: $muted-text;
 }
 
 .tiny-actor-icon {
@@ -221,16 +223,23 @@ header.microblog {
 	}
 }
 
+/*********
+ * Attachments and link previews
+ */
+
 .activity-og-meta, .activity-attachment {
-	background: $background;
+	position: relative;
+	border: none;
+	display: flex;
+	padding: 0;
+	padding-left: 65px;
+	margin: 1em 0 1em -65px;
+	max-width: calc(100% + 65px);
 }
 
 .activity-og-meta {
-	display: flex;
-	padding: 0;
 	.meta-img {
 		flex: 0 0 150px;
-		border-radius: 4px 0 0 4px;
 		img {
 			width: 100%;
 			height: 100%;
@@ -247,29 +256,12 @@ header.microblog {
 	}
 }
 
-/*********
-* Attachments
-*/
-
 .activity-attachment {
-	position: relative;
-	display: flex;
-	padding-left: 65px;
-	margin-left: -65px;
-	max-width: calc(100% + 65px);
 	flex-wrap: wrap;
 	&.single {
 		.attachment-item, .attachment-wrapper {
 			max-height: fit-content;
 		}
-	}	
-	.icon {
-		display: block;
-		position: absolute;
-		top: 5px;
-		left: 10px;
-		font-size: 2em;
-		color: $muted-text;
 	}
 	audio, video {
 		width: 100%;
