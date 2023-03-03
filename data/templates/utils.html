@@ -296,10 +296,12 @@
     <div class="icon-box">
         <img src="{{ actor.resized_icon_url }}" alt="{{ actor.display_name }}'s avatar" class="actor-icon u-photo">
     </div>
-    <a href="{{ actor.url }}" class="u-url">
-        <div><strong>{{ actor.display_name | clean_html(actor) | safe  }}</strong></div>
+    <div>
+        <a href="{{ actor.url }}" class="u-url">
+            <strong>{{ actor.display_name | clean_html(actor) | safe  }}</strong>
+        </a>
         <div class="actor-handle p-name">{{ actor.handle }}</div>
-    </a>
+    </div>
 </div>
 
 {% if is_admin and metadata %}
