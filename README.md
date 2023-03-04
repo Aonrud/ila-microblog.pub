@@ -2,10 +2,6 @@
 
 This repo is forked to store the template customisation of [microblog.pub](https://microblog.pub/) for the [Irish Left Archive](https://www.leftarchive.ie). It is used for [@ila@leftarchive.ie](https://posts.leftarchive.ie/).
 
-### TO DO:
-* Sort out asset compilation / build tools.
-   * ILA UI Elements JS is just copied over from node_modules
-
 # microblog.pub
 
 A self-hosted, single-user, ActivityPub powered microblog.

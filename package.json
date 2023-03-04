@@ -2,7 +2,7 @@
   "name": "ILA Microblog.pub assets",
   "description": "ILA Microblog.pub assets",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "js": "cp node_modules/ila-ui-elements/dist/ila-ui.esm.js app/static/"
   },
   "author": "Aonrud",
   "license": "",

@@ -1,0 +1,15 @@
+lockfileVersion: 5.4
+
+specifiers:
+  ila-ui-elements: Aonrud/ila-ui-elements#semver:0.8.2
+
+dependencies:
+  ila-ui-elements: github.com/Aonrud/ila-ui-elements/66bd1b0d5d7ff2b6e064e78f7db4c7522df0cd15
+
+packages:
+
+  github.com/Aonrud/ila-ui-elements/66bd1b0d5d7ff2b6e064e78f7db4c7522df0cd15:
+    resolution: {tarball: https://codeload.github.com/Aonrud/ila-ui-elements/tar.gz/66bd1b0d5d7ff2b6e064e78f7db4c7522df0cd15}
+    name: ila_ui_elements
+    version: 0.8.2
+    dev: false
