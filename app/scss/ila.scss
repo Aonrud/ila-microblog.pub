@@ -232,9 +232,6 @@ header.microblog {
 	border: none;
 	display: flex;
 	padding: 0;
-	padding-left: 65px;
-	margin: 1em 0 1em -65px;
-	max-width: calc(100% + 65px);
 }
 
 .activity-og-meta {
@@ -260,6 +257,9 @@ header.microblog {
 
 .activity-attachment {
 	flex-wrap: wrap;
+	padding-left: 65px;
+	margin: 1em 0 1em -65px;
+	max-width: calc(100% + 65px);
 	&.single {
 		.attachment-item, .attachment-wrapper {
 			max-height: fit-content;
