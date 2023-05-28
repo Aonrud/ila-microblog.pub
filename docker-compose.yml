@@ -11,4 +11,4 @@ services:
       - ./app/static:/app/app/static
       - ./app/scss:/app/app/scss
     ports:
-      - "8082:8000"
+      - 127.0.0.1:8082:8000
