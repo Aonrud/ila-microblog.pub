@@ -54,8 +54,12 @@
                     {%- elif notif.notification_type.value == "move" %}
                         {# for move notif, the actor is the target and the inbox object the Move activity #}
                         <div class="actor-action">
-                            <a href="{{ url_for("admin_profile") }}?actor_id={{ notif.inbox_object.actor.ap_id }}">
-                                {{ utils.display_tiny_actor_icon(notif.inbox_object.actor) }} {{ notif.inbox_object.actor.display_name | clean_html(notif.inbox_object.actor) | safe }}</a> has moved to
+                            {% if notif.inbox_object.actor %}
+                                <a href="{{ url_for("admin_profile") }}?actor_id={{ notif.inbox_object.actor.ap_id }}">
+                                    {{ utils.display_tiny_actor_icon(notif.inbox_object.actor) }} {{ notif.inbox_object.actor.display_name | clean_html(notif.inbox_object.actor) | safe }}</a> has moved to
+                            {% else %}
+                                ERROR: Missing actor on move object
+                            {% endif %}
                             <span title="{{ notif.created_at.isoformat() }}">{{ notif.created_at | timeago }}</span>
                         </div>
                         {{ utils.display_actor(notif.actor) }}
