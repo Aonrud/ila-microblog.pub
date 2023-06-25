@@ -413,7 +413,7 @@
 <div class="activity-og-meta">
     {% if og_meta.image %}
     <div>
-        <img src="{{ og_meta.image | media_proxy_url }}">
+        <img src="{{ og_meta.image | media_proxy_url }}" {% if og_meta.image__alt %} alt="{{ og_meta.image__alt }}"{% endif %}>
     </div>
     {% endif %}
     <div>
