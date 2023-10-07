@@ -1,15 +1,25 @@
-lockfileVersion: 5.4
+lockfileVersion: '6.0'
 
-specifiers:
-  ila-ui-elements: Aonrud/ila-ui-elements#semver:0.8.2
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
-dependencies:
-  ila-ui-elements: github.com/Aonrud/ila-ui-elements/66bd1b0d5d7ff2b6e064e78f7db4c7522df0cd15
+devDependencies:
+  '@panzoom/panzoom':
+    specifier: ^4.5.1
+    version: 4.5.1
+  ila-ui-elements:
+    specifier: git+https://git.aonghus.org/Irish-Left-Archive/ila-ui-elements.git#semver:0.9.0
+    version: git.aonghus.org/Irish-Left-Archive/ila-ui-elements/3409cd600d42972200d5bc6f5e4bbf970e1ca0d6
 
 packages:
 
-  github.com/Aonrud/ila-ui-elements/66bd1b0d5d7ff2b6e064e78f7db4c7522df0cd15:
-    resolution: {tarball: https://codeload.github.com/Aonrud/ila-ui-elements/tar.gz/66bd1b0d5d7ff2b6e064e78f7db4c7522df0cd15}
+  /@panzoom/panzoom@4.5.1:
+    resolution: {integrity: sha512-QOr/t7314XTwgAUDazR+RDcTAWSbkpjDnZJddd9f56jSUA8ptUsyDblAb+sp/O5O1o5Fiu9KpWxVHKuhGUgp5w==}
+    dev: true
+
+  git.aonghus.org/Irish-Left-Archive/ila-ui-elements/3409cd600d42972200d5bc6f5e4bbf970e1ca0d6:
+    resolution: {commit: 3409cd600d42972200d5bc6f5e4bbf970e1ca0d6, repo: https://git.aonghus.org/Irish-Left-Archive/ila-ui-elements.git, type: git}
     name: ila_ui_elements
-    version: 0.8.2
-    dev: false
+    version: 0.9.0
+    dev: true

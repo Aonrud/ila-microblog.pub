@@ -1,8 +1,10 @@
 import { ImageViewer } from './ila-ui.esm.js';
+import Panzoom from './panzoom.es.js';
 
 const iv = new ImageViewer({
 	showDownload: true,
 	showLink: false,
+	panzoom: Panzoom,
 	texts: {
 		cue: "",
 		hide: "",

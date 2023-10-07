@@ -26,11 +26,8 @@ function applyConfig(defaults, conf) {
 	let c = {};
 	
 	for (const prop in defaults) {
-		if (conf[prop] && typeof conf[prop] !== typeof defaults[prop]) {
-			console.warn(`Config option ${prop} has the wrong type of value. Skipping`);
-			continue;
-		}
-		if (typeof defaults[prop] === "object" && !(defaults[prop] instanceof Array) && conf[prop]) {
+		
+		if (typeof defaults[prop] === "object" && !(defaults[prop] instanceof Array) && conf[prop] && typeof conf[prop] !== "function") {
 			c[prop] = applyConfig(defaults[prop], conf[prop]);
 		} else {
 			c[prop] = conf[prop] ?? defaults[prop];
@@ -276,7 +273,7 @@ class Scroller {
 		const swipe = new Swipe(this._wrapper);
 		swipe.attach();
 		this._wrapper.addEventListener('swiped-right', () => this.left() );
-		this._wrapper.addEventListener('swiped-left', e => this.right() );
+		this._wrapper.addEventListener('swiped-left', () => this.right() );
 	}
 	
 	/**
@@ -440,8 +437,8 @@ class Scroller {
  * The configuration object for the ImageViewer.
  * @typedef {object} imageViewerConfig
  * @property {string} [targetClass = viewer]
- * @property {boolean} [panzoom = false]
- * Activate the zoom button, which toggles the image's full size and allows panning around.
+ * @property {function|null} [panzoom = null]
+ * If the Panzoom function is passed, activate the zoom button, which toggles the image's full size and allows panning around.
  * Requires @panzoom/panzoom module to be available.
  * @property {boolean} [showDownload = false] Show a button to download the image
  * @property {boolean} [showLink = true] Show a link button for any images with a link associated
@@ -495,7 +492,7 @@ class Scroller {
  */
 const defaultImageViewerConfig = {
 	targetClass: "viewer",
-	panzoom: false,
+	panzoom: null,
 	showDownload: false,
 	showLink: true,
 	captions: [ "& + figcaption", "& + .caption" ],
@@ -565,6 +562,7 @@ class ImageViewer {
 	 * @public
 	 */
 	next() {
+		if (this._images.length < 2) return;
 		const n = this._activeIndex === this._images.length - 1 ? 0 : this._activeIndex + 1;
 		this.show(n);
 	}
@@ -574,6 +572,7 @@ class ImageViewer {
 	 * @public
 	 */
 	prev() {
+		if (this._images.length < 2) return;
 		const n = this._activeIndex === 0 ? this._images.length - 1 : this._activeIndex - 1;
 		this.show(n);
 	}
@@ -639,14 +638,13 @@ class ImageViewer {
 		
 		//Prevent jumping back if display has moved on to another image before this one is loaded.
 		if(el.dataset.loading == url) {
-			console.log(url);
 			//Put the loaded image into the visible <img> element.
 			//The promise is awaited again to prevent the controls update checking the width before the image is in position.
 			await this._loadImage(url, this._imgDisplay);
 			el.alt = img.getAttribute("alt");
 			this._loader.style.visibility = "hidden";
 			this._updateCaption(n);
-			this.revealToggle(!img.dataset.hasOwnProperty("reveal") || !img.dataset.reveal == 'true');
+			this.revealToggle(!Object.hasOwn(img.dataset, "reveal") || !img.dataset.reveal == 'true');
 			this._updateControls();
 		}
 	}
@@ -659,7 +657,6 @@ class ImageViewer {
 	 * @return Promise
 	 */
 	_loadImage(url, i = new Image()) {
-		console.log(`Loading ${url}`);
 		return new Promise((resolve) => {
 			i.addEventListener('load', () => { resolve(url); });
 			i.src = url;
@@ -752,7 +749,7 @@ class ImageViewer {
 	 */
 	btnToggle(btn, switchOn = true) {
 		const btnName = btn.id.replace("btn-", "");
-		const btnTextNode = [...btn.childNodes].filter( n => n.nodeType === Node.TEXT_NODE)[0];
+		let btnTextNode = [...btn.childNodes].filter( n => n.nodeType === Node.TEXT_NODE)[0];
 		const txt = switchOn ? this._config.texts[`${btnName}Active`] : this._config.texts[btnName];
 		const icon = switchOn ? this._config.icons[`${btnName}Active`] : this._config.icons[btnName];
 		const title = switchOn ? this._config.titles[`${btnName}Active`] : this._config.titles[btnName];
@@ -853,8 +850,8 @@ class ImageViewer {
 		document.body.append(this._overlay);
 		
 		//Instantiate panzoom if needed
-		if (this._config.panzoom) {
-			this._pzInstance = this._pzInstance ?? Panzoom(this._imgDisplay, { disableZoom: true, noBind: true });
+		if (typeof this._config.panzoom === "function") {
+			this._pzInstance = this._pzInstance ?? this._config.panzoom(this._imgDisplay, { disableZoom: true, noBind: true });
 			//Even though only instantiated, the classes are set so we do a full switch off for the initial state
 			this.zoomToggle(false);
 		}
@@ -917,7 +914,12 @@ class ImageViewer {
 			controls.append(makeButton(b, "", this._config.texts[b], this._config.titles[b], this._config.icons[b], this));
 		}
 		
-		if (this._config.panzoom) controls.append(makeButton("zoom", "", this._config.texts.zoom, this._config.titles.zoom, this._config.icons.zoom, this));
+		if (typeof this._config.panzoom === "function") {
+			controls.append(makeButton("zoom", "", this._config.texts.zoom, this._config.titles.zoom, this._config.icons.zoom, this));
+		} else {
+			console.log(`No Panzoom: ${typeof this._config.panzoom}`);
+			console.log(this._config.panzoom);
+		}
 		
 		for (const a of anchors) {
 			if (this._config[`show${a.charAt(0).toUpperCase() + a.slice(1)}`]) {
@@ -961,8 +963,7 @@ class ImageViewer {
 		}
 			
 		
-		if (this._config.panzoom) {
-			console.log(`Shown: ${img.width}; Actual: ${img.naturalWidth}`);
+		if (typeof this._config.panzoom === "function") {
 			const btnZoom = document.getElementById("btn-zoom");
 			if(img.width < img.naturalWidth) {
 				btnZoom.disabled = false;
@@ -985,7 +986,7 @@ class ImageViewer {
 			"ArrowLeft": "prev",
 			"ArrowRight": "next"
 		};
-		if (keys.hasOwnProperty(e.key) && typeof this[keys[e.key]] === "function") {
+		if (Object.hasOwn(keys, e.key) && typeof this[keys[e.key]] === "function") {
 			e.preventDefault();
 			this[keys[e.key]]();
 		}
